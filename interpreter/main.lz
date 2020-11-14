@@ -1,0 +1,8 @@
+
+/*
+This is a lizzy code
+:)
+*/
+
+print "hello\nworld!"
+print "\033[91;3mHello!\033[0m"
