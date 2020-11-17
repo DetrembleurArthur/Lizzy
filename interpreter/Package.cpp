@@ -4,14 +4,14 @@ using namespace std;
 using namespace lizzy;
 
 
-Package::Package(const std::string& name, const Extractable* super) : Extractable(name, super)
+Package::Package(const std::string& name, const Packageable* super) : Packageable(name, super)
 {
 
 }
 
 Package::~Package()
 {
-    for(Extractable *child : children)
+    for(Packageable *child : children)
     {
         delete child;
     }
