@@ -17,6 +17,7 @@ namespace lizzy
         Instruction(const Instruction& other);
         Instruction(Instruction&& other);
         void setRunnable(Runnable runnable);
+        Runnable getRunnable() const;
         Instruction& push(const Callable& arg);
         Instruction& push(Callable&& arg);
         std::string getResult() const override;
