@@ -6,13 +6,14 @@
 
 namespace lizzy
 {
-    typedef std::string (*Arguments)(const std::vector<std::string> &args);
+    typedef const std::vector<std::string>& Arguments;
+    typedef std::string (*Action)(Arguments args);
 
     class Command : public Packageable
     {
     private:
         std::vector<Command *> subcommands;
-        std::map<int, Arguments> actions;
+        std::map<int, Action> actions;
 
     public:
         Command(const std::string &name, const Packageable *super = nullptr);
