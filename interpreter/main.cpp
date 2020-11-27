@@ -1,5 +1,9 @@
-#include "Parser.hpp"
-#include "Package.hpp"
+//#include "Parser.hpp"
+//#include "Package.hpp"
+#include <map>
+#include <iostream>
+#include <type_traits>
+#include "ActionBundle.hpp"
 
 using namespace std;
 using namespace lizzy;
@@ -24,10 +28,25 @@ int main(int argc, char const *argv[])
         cout << "> " << token << endl;
     }
 */
-    Package *pkg = new Package("root");
-    pkg->addPkg("usr")
-        .addPkg("sys");
+    ActionBundle bundle;
 
-    delete pkg;
+
+    LZDataType lz;
+
+    class LZ2 : public LZDataType
+    {};
+    LZ2 lz2;
+
+    LZDataType *plz = &lz2;
+
+    LZDataType& rlz = lz2;
+
+    bundle.setAction({plz->getId()}, [](Arguments args)
+    {
+        LZDataType& d = *args[0];
+
+        return new LZDataType();
+    });
+    
     return 0;
 }
