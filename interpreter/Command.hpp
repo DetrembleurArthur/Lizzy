@@ -3,20 +3,20 @@
 #include "Packageable.hpp"
 #include <vector>
 #include <map>
+#include "ActionBundle.hpp"
 
 namespace lizzy
 {
-    typedef const std::vector<std::string>& Arguments;
-    typedef std::string (*Action)(Arguments args);
-
     class Command : public Packageable
     {
     private:
         std::vector<Command *> subcommands;
-        std::map<int, Action> actions;
+        ActionBundle *actionBundle;
 
     public:
         Command(const std::string &name, const Packageable *super = nullptr);
+        virtual ~Command();
+        ActionBundle& getActionBundle();
     };
 } // namespace lizzy
 
