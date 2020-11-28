@@ -3,32 +3,23 @@
 using namespace std;
 using namespace lizzy;
 
-Argument::Argument() : Argument("/")
+Argument::Argument() : Argument(nullptr)
 {
 
 }
 
-Argument::Argument(const string& result) : result(result)
+Argument::Argument(LZDataType* result) : result(result)
 {
     
 }
 
-Argument::Argument(const Argument& other) : Argument(other.getResult())
-{
 
-}
-
-Argument::Argument(Argument&& other) : Argument(other.getResult())
-{
-
-}
-
-void Argument::setResult(const string& result)
+void Argument::setResult(LZDataType *result)
 {
     this->result = result;
 }
 
-string Argument::getResult() const
+LZDataType *Argument::getResult() const
 {
     return result;
 }

@@ -7,14 +7,12 @@ namespace lizzy
     class Argument : public Callable
     {
     private:
-        std::string result;
+        LZDataType *result;
     public:
         Argument();
-        Argument(const std::string& result);
-        Argument(const Argument& other);
-        Argument(Argument&& other);
-        void setResult(const std::string& result);
-        std::string getResult() const override;
+        Argument(LZDataType* result);
+        void setResult(LZDataType* result);
+        LZDataType *getResult() const override;
     };
 }
 

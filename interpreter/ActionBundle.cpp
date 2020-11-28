@@ -4,13 +4,21 @@
 using namespace std;
 using namespace lizzy;
 
+const int ActionBundle::UNDEFINED_NUMBER_OF_ARGUMENTS = -1;
+
 ActionBundle::ActionBundle()
 {
 	
 }
 
+void ActionBundle::setAction(Action action)
+{
+    bundle[UNDEFINED_NUMBER_OF_ARGUMENTS][""] = action;
+}
+
 void ActionBundle::setAction(vector<string>&& prototype, Action action)
 {
+    auto len = prototype.size();
     string proto_str = "";
     if(not prototype.empty())
     {
@@ -21,6 +29,5 @@ void ActionBundle::setAction(vector<string>&& prototype, Action action)
             proto_str += "-" + prototype[i];
         }
     }
-    cout << proto_str << endl;
-    bundle[proto_str] = action;
+    bundle[len][proto_str] = action;
 }

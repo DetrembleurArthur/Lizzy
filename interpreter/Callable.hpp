@@ -1,13 +1,14 @@
 #ifndef CALLABLE_HPP
 #define CALLABLE_HPP
 #include <string>
+#include "types/LZDataType.hpp"
 
 namespace lizzy
 {
     class Callable
     {
     public:
-        virtual std::string getResult() const = 0;
+        virtual LZDataType *getResult() const = 0;
     };
 }
 

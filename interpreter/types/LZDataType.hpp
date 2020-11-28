@@ -12,7 +12,11 @@ namespace lizzy
         void *value;
     public:
         LZDataType();
+        LZDataType(void *ptr);
+        virtual ~LZDataType();
         virtual std::string getId() const final;
+        void *getValue() const;
+        void setValue(void *value);
     };
 }
 

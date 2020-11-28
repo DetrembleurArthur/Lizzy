@@ -5,47 +5,39 @@ using namespace std;
 using namespace lizzy;
 
 
-Instruction::Instruction() : Instruction(nullptr)
+
+Instruction::Instruction(ProtoMap& ProtoMap) : protoMap(protoMap)
 {
 
 }
 
-Instruction::Instruction(Runnable runnable) : runnable(runnable)
-{
-
-}
-
-Instruction::Instruction(const Instruction& other) : Instruction(other.getRunnable())
-{
-
-}
-
-Instruction::Instruction(Instruction&& other) : Instruction(other.getRunnable())
-{
-
-}
-
-void Instruction::setRunnable(Runnable runnable)
-{
-	this->runnable = runnable;
-}
-
-Runnable Instruction::getRunnable() const
-{
-	return runnable;
-}
 
 Instruction& Instruction::push(const Callable& arg)
 {
-	arguments.push(arg);
+	arguments.push_back(arg);
 }
 
 Instruction& Instruction::push(Callable&& arg)
 {
-	arguments.push(arg);
+	arguments.push_back(arg);
 }
 
-string Instruction::getResult() const
+
+
+LZDataType *Instruction::getResult() const
 {
-	return runnable(arguments);
+	vector<LZDataType *> results;
+	string prototype = "";
+	if(not arguments.empty())
+	{
+		auto len = arguments.size();
+		prototype = arguments[0].getResult()->getId();
+		for(int i = 1; i < len; i++)
+		{
+			LZDataType *result = arguments[i].getResult();
+			prototype += "-" + result->getId();
+			results.push_back(result);
+		}
+	}
+	return protoMap[prototype](results);
 }
