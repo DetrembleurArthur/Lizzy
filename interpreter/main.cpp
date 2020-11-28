@@ -3,7 +3,7 @@
 #include <map>
 #include <iostream>
 #include <type_traits>
-#include "ActionBundle.hpp"
+#include "Package.hpp"
 
 using namespace std;
 using namespace lizzy;
@@ -28,25 +28,22 @@ int main(int argc, char const *argv[])
         cout << "> " << token << endl;
     }
 */
-    ActionBundle bundle;
-
-
-    LZDataType lz;
-
-    class LZ2 : public LZDataType
-    {};
-    LZ2 lz2;
-
-    LZDataType *plz = &lz2;
-
-    LZDataType& rlz = lz2;
-
-    bundle.setAction({plz->getId()}, [](Arguments args)
+    try
     {
-        LZDataType& d = *args[0];
+        Package package("root.master");
+        package.addPackage("std.math");
+        package.addPackage("std.io");
+        package.addPackage("std.str");
+        package.addPackage("user.func");
+        cout << package.existsPackage("std.io") << endl;
+        package.removePackage("std.io");
+        cout << package.existsPackage("std.io") << endl;
+    }
+    catch(const LZException& e)
+    {
+        cout << e.getMessage() << endl;
+    }
 
-        return new LZDataType();
-    });
     
     return 0;
 }

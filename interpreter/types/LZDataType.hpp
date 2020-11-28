@@ -1,7 +1,8 @@
 #ifndef LZ_DATA_TYPE_HPP
 #define LZ_DATA_TYPE_HPP
-#include <string>
 #include <type_traits>
+#include "../Exceptions.hpp"
+
 #define ID(type) typeid(type).name()
 
 namespace lizzy

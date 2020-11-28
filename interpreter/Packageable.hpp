@@ -2,6 +2,7 @@
 #define EXTRACTABLE_HPP
 #include <string>
 #include <iostream>
+#include "Exceptions.hpp"
 
 namespace lizzy
 {
@@ -20,6 +21,7 @@ namespace lizzy
         std::string getName() const;
         std::string getFullName() const;
         bool operator==(const Packageable &other) const;
+        friend std::ostream& operator<<(std::ostream& out, const Packageable& p);
     };
 } // namespace lizzy
 

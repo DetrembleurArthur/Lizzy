@@ -12,7 +12,7 @@ Packageable::Packageable(const std::string& name, const Packageable *super)
 
 Packageable::~Packageable()
 {
-    cout << "destroy: " << getFullName() << endl;
+    cout << "clear " << getFullName() << endl;
 }
 
 void Packageable::setSuper(const Packageable *super)
@@ -22,6 +22,8 @@ void Packageable::setSuper(const Packageable *super)
 
 void Packageable::setName(const std::string& name)
 {
+    if(name.find(".") != string::npos)
+        throw LZException("package name must not contain '.' char : " + name);
     this->name = name;
 }
 
@@ -43,4 +45,9 @@ std::string Packageable::getFullName() const
 bool Packageable::operator==(const Packageable& other) const
 {
     return getFullName() == other.getFullName();
+}
+
+std::ostream& operator<<(std::ostream& out, const Packageable& p)
+{
+    return out << p.getFullName();
 }
