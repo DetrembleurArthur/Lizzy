@@ -23,7 +23,7 @@ void Packageable::setSuper(const Packageable *super)
 void Packageable::setName(const std::string& name)
 {
     if(name.find(".") != string::npos)
-        throw LZException("package name must not contain '.' char : " + name);
+        throw LZException("package name must not contains '.' char : " + name);
     this->name = name;
 }
 
@@ -50,4 +50,21 @@ bool Packageable::operator==(const Packageable& other) const
 std::ostream& operator<<(std::ostream& out, const Packageable& p)
 {
     return out << p.getFullName();
+}
+
+void Packageable::extractNames(const std::string& name, std::string& dstcurrent, std::string& dstsub)
+{
+    int i = name.find(".");
+    if(i != string::npos)
+    {
+        if(i == name.size() - 1)
+            throw LZException(name + " package path is not correctly formatted");
+        dstsub = name.substr(i + 1);
+        dstcurrent = name.substr(0, i);
+    }
+    else
+    {
+        dstsub = "";
+        dstcurrent = name;
+    }
 }

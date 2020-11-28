@@ -30,14 +30,14 @@ int main(int argc, char const *argv[])
 */
     try
     {
-        Package package("root.master");
-        package.addPackage("std.math");
-        package.addPackage("std.io");
-        package.addPackage("std.str");
-        package.addPackage("user.func");
-        cout << package.existsPackage("std.io") << endl;
-        package.removePackage("std.io");
-        cout << package.existsPackage("std.io") << endl;
+        Command command("print");
+        command.createSubCommand("integer.time");
+        command.createSubCommand("integer.one");
+        command.createSubCommand("float.time");
+cout << "!" <<endl;
+        command.removeSubCommand("integer.one");
+cout << "!" << endl;
+     //   package.createCommand("std.math.mul");
     }
     catch(const LZException& e)
     {

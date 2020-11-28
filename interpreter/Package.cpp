@@ -17,29 +17,14 @@ Package::~Package()
     }
 }
 
-void Package::extractPackageNames(const std::string& name, std::string& dstcurrent, std::string& dstsub)
-{
-    int i = name.find(".");
-    if(i != string::npos)
-    {
-        if(i == name.size() - 1)
-            throw LZException(name + " package path is not correctly formatted");
-        dstsub = name.substr(i + 1);
-        dstcurrent = name.substr(0, i);
-    }
-    else
-    {
-        dstsub = "";
-        dstcurrent = name;
-    }
-}
 
-Package& Package::addPackage(const string& name)
+
+Package& Package::createPackage(const string& name)
 {
     string pkgname;
     string subname;
-    extractPackageNames(name, pkgname, subname);
-
+    extractNames(name, pkgname, subname);
+    
     if(subname.size())
     {
         for(int i = 0; i < children.size(); i++)
@@ -48,13 +33,14 @@ Package& Package::addPackage(const string& name)
             {
                 if(children[i]->getName() == pkgname)
                 {
-                    return dynamic_cast<Package *>(children[i])->addPackage(subname);
+                    return dynamic_cast<Package *>(children[i])->createPackage(subname);
                 }
             }
         }
         Package *pkg = new Package(pkgname, this);
         children.push_back(pkg);
-        pkg->addPackage(subname);
+        pkg->createPackage(subname);
+        return *pkg;
     }
     else
     {
@@ -70,7 +56,7 @@ void Package::removePackage(const string& name)
 {
     string pkgname;
     string subname;
-    extractPackageNames(name, pkgname, subname);
+    extractNames(name, pkgname, subname);
 
     for(int i = 0; i < children.size(); i++)
     {
@@ -91,13 +77,14 @@ void Package::removePackage(const string& name)
             }
         }
     }
+    throw LZException(name + " package not exists on " + getFullName() + " package");
 }
 
 bool Package::existsPackage(const std::string& name)
 {
     string pkgname;
     string subname;
-    extractPackageNames(name, pkgname, subname);
+    extractNames(name, pkgname, subname);
 
     for(int i = 0; i < children.size(); i++)
     {
@@ -124,7 +111,7 @@ Package& Package::getPackage(const std::string& name)
 {
     string pkgname;
     string subname;
-    extractPackageNames(name, pkgname, subname);
+    extractNames(name, pkgname, subname);
 
     for(int i = 0; i < children.size(); i++)
     {
@@ -146,3 +133,4 @@ Package& Package::getPackage(const std::string& name)
     }
     throw LZException(name + " package does not exists");
 }
+

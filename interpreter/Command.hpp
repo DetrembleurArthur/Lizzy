@@ -17,6 +17,9 @@ namespace lizzy
         Command(const std::string &name, const Packageable *super = nullptr);
         virtual ~Command();
         ActionBundle& getActionBundle();
+        Command& createSubCommand(const std::string& name);
+        void removeSubCommand(const std::string& name);
+        Command& getSubCommand(const std::string& name);
     };
 } // namespace lizzy
 

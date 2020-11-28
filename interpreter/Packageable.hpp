@@ -11,7 +11,8 @@ namespace lizzy
     private:
         std::string name;
         const Packageable *super;
-
+    protected:
+        void extractNames(const std::string& name, std::string& dstcurrent, std::string& dstsub);
     public:
         Packageable(const std::string &name, const Packageable *super = nullptr);
         virtual ~Packageable();
