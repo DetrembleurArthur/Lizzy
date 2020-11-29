@@ -20,6 +20,7 @@ Command::~Command()
     {
         delete sub;
     }
+    cout << "clear command " << getViewFullName() << endl;
 }
 
 ActionBundle& Command::getActionBundle()
@@ -46,7 +47,7 @@ Command& Command::createSubCommand(const std::string& name)
             }
             else
             {
-                throw LZException(getFullName() + "." + name + " command already exists");
+                throw LZException(getViewFullName() + "." + name + " command already exists");
             }
         }
     }
@@ -81,7 +82,7 @@ void Command::removeSubCommand(const std::string& name)
             return;
         }
     }
-    throw LZException(name + " subcommand not exists on " + getFullName() + " command");
+    throw LZException(name + " subcommand not exists on " + getViewFullName() + " command");
 }
 
 Command& Command::getSubCommand(const std::string& name)
@@ -103,5 +104,33 @@ Command& Command::getSubCommand(const std::string& name)
             }
         }
     }
-    throw LZException(name + " subcommand not exists on " + getFullName() + " command");
+    throw LZException(name + " subcommand not exists on " + getViewFullName() + " command");
 }
+
+bool Command::existsSubCommand(const std::string& name)
+{
+    string cmdname;
+    string subname;
+    extractNames(name, cmdname, subname);
+    for(Command *sub : subcommands)
+    {
+        if(sub->getName() == cmdname)
+        {
+            if(subname.size())
+            {
+                return sub->existsSubCommand(subname);
+            }
+            else
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+std::string Command::getViewFullName() const
+{
+    return super ? super->getViewFullName() + ".\033[93m" + getName() + "\033[0m" : "\033[96m" + getName() + "\033[0m";
+}
+

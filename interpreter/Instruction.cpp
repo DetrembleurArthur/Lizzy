@@ -15,6 +15,7 @@ Instruction::Instruction(Command& command, ProtoMap& ProtoMap, Instruction *supe
 Instruction& Instruction::push(Callable* arg)
 {
 	arguments.push_back(arg);
+	return *this;
 }
 
 

@@ -8,11 +8,12 @@ Packageable::Packageable(const std::string& name, const Packageable *super)
 {
     setName(name);
     setSuper(super);
+    flags.able = true;
 }
 
 Packageable::~Packageable()
 {
-    cout << "clear " << getFullName() << endl;
+    
 }
 
 void Packageable::setSuper(const Packageable *super)
@@ -42,6 +43,11 @@ std::string Packageable::getFullName() const
     return super ? super->getFullName() + "." + getName() : getName();
 }
 
+std::string Packageable::getViewFullName() const
+{
+    return getViewFullName();
+}
+
 bool Packageable::operator==(const Packageable& other) const
 {
     return getFullName() == other.getFullName();
@@ -67,4 +73,14 @@ void Packageable::extractNames(const std::string& name, std::string& dstcurrent,
         dstsub = "";
         dstcurrent = name;
     }
+}
+
+bool Packageable::isAble() const
+{
+    return flags.able;
+}
+
+void Packageable::setAble(bool state)
+{
+    flags.able = state;
 }

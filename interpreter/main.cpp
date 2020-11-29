@@ -30,14 +30,12 @@ int main(int argc, char const *argv[])
 */
     try
     {
-        Command command("print");
-        command.createSubCommand("integer.time");
-        command.createSubCommand("integer.one");
-        command.createSubCommand("float.time");
-cout << "!" <<endl;
-        command.removeSubCommand("integer.one");
-cout << "!" << endl;
-     //   package.createCommand("std.math.mul");
+        Package *package = Package::create();
+        package->createPackage("lizzy").createCommand("load.file");
+        package->getPackage("lizzy").createCommand("hello");
+        package->createPackage("user").createCommand("hostname");
+
+        delete package;
     }
     catch(const LZException& e)
     {
