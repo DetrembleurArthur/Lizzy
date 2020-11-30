@@ -10,11 +10,6 @@ namespace lizzy
     {
     private:
         std::string name;
-        struct Flags
-        {
-            bool able : 1;
-        }flags;
-        
     protected:
         const Packageable *super;
         static void extractNames(const std::string& name, std::string& dstcurrent, std::string& dstsub);
@@ -28,9 +23,6 @@ namespace lizzy
         std::string getFullName() const;
         bool operator==(const Packageable &other) const;
         virtual std::string getViewFullName() const;
-        bool isAble() const;
-        void setAble(bool state);
-        virtual void setFlagsCascade() = 0;
         friend std::ostream& operator<<(std::ostream& out, const Packageable& p);
     };
 } // namespace lizzy

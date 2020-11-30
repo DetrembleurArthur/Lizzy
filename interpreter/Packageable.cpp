@@ -8,7 +8,6 @@ Packageable::Packageable(const std::string& name, const Packageable *super)
 {
     setName(name);
     setSuper(super);
-    flags.able = true;
 }
 
 Packageable::~Packageable()
@@ -75,12 +74,3 @@ void Packageable::extractNames(const std::string& name, std::string& dstcurrent,
     }
 }
 
-bool Packageable::isAble() const
-{
-    return flags.able;
-}
-
-void Packageable::setAble(bool state)
-{
-    flags.able = state;
-}

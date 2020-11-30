@@ -14,7 +14,7 @@ namespace lizzy
     class ActionBundle
     {
     private:
-        std::map<int, std::map<std::string, Action>> bundle;
+        std::map<int, ProtoMap> bundle;
     public:
         static const int UNDEFINED_NUMBER_OF_ARGUMENTS;
         ActionBundle();

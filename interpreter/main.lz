@@ -4,9 +4,33 @@ This is a lizzy code
 :)
 */
 
+$alias lizzy.std.io.print[$] out
+
+out "Hello world!"
+
+$enable package lizzy
+
 print "hello\nworld!"
 print "\033[91;3mHello!\033[0m"
 
+print hello
+print hello[#]
+
+print[2,root] "hello" "world!"
+
+
+thread.thread testTH
+
+	until 0 10
+
+		print "Hello world!"
+
+	end until
+
+thread.end thread
+
+
+thread.join testTH
 
 /*
 

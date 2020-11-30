@@ -6,7 +6,7 @@ using namespace lizzy;
 
 
 
-Instruction::Instruction(Command& command, ProtoMap& ProtoMap, Instruction *super) : protoMap(protoMap), command(command), super(super)
+Instruction::Instruction(Command& command, ProtoMap& protoMap, Instruction *super) : protoMap(protoMap), command(command), super(super)
 {
 
 }

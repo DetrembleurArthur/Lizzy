@@ -22,7 +22,6 @@ namespace lizzy
         Command& getSubCommand(const std::string& name);
         bool existsSubCommand(const std::string& name);
         std::string getViewFullName() const override;
-        void setFlagsCascade() override;
     };
 } // namespace lizzy
 

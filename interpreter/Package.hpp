@@ -12,7 +12,7 @@ namespace lizzy
         std::vector<Packageable *> children;
         Package(const std::string &name, const Packageable *super = nullptr);
     public:
-        static Package *create(const std::string& name="root");
+        static Package *create(const std::string& name="lizzy");
         virtual ~Package();
         Package &createPackage(const std::string &pkgname);
         void removePackage(const std::string& name);
@@ -23,7 +23,6 @@ namespace lizzy
         bool existsCommand(const std::string& name);
         Command& getCommand(const std::string& name);
         std::string getViewFullName() const override;
-        void setFlagsCascade() override;
     };
 } // namespace lizzy
 
