@@ -29,5 +29,11 @@ void ActionBundle::setAction(vector<string>&& prototype, Action action)
             proto_str += "-" + prototype[i];
         }
     }
+    cout << len << " :: " << proto_str << endl;
     bundle[len][proto_str] = action;
+}
+
+ProtoMap& ActionBundle::getProtoMap(int nargs)
+{
+    return bundle[nargs];
 }

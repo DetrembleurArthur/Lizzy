@@ -1,9 +1,9 @@
 #ifndef INSTRUCTION_HPP
 #define INSTRUCTION_HPP
-#include "Callable.hpp"
 #include <vector>
 #include "ActionBundle.hpp"
 #include "Command.hpp"
+#include "Argument.hpp"
 
 namespace lizzy
 {

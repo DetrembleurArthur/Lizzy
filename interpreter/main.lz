@@ -4,6 +4,9 @@ This is a lizzy code
 :)
 */
 
+print.user
+print user
+
 $alias lizzy.std.io.print[$] out
 
 out "Hello world!"
@@ -16,7 +19,7 @@ print "\033[91;3mHello!\033[0m"
 print hello
 print hello[#]
 
-print[2,root] "hello" "world!"
+print$[2] "hello" "world!"
 
 
 thread.thread testTH

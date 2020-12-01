@@ -23,7 +23,25 @@ Package::~Package()
     cout << "clear package " << getViewFullName() << endl;
 }
 
+void Package::removePackage(const std::string& name)
+{
+    if(existsPackage(name))
+        remove(name);
+    throw LZException(name + " package not exists on " + getViewFullName() + " package");
+}
 
+bool Package::existsPackage(const std::string& name)
+{
+    return dynamic_cast<Package * >(get(name));
+}
+
+Package& Package::getPackage(const std::string& name)
+{
+    Package *package = dynamic_cast<Package *>(get(name));
+    if(package)
+        return *package;
+    throw LZException(name + " package does not exists on " + getViewFullName() + " package");
+}
 
 Package& Package::createPackage(const string& name)
 {
@@ -62,7 +80,7 @@ Package& Package::createPackage(const string& name)
     }
 }
 
-void Package::removePackage(const string& name)
+void Package::remove(const string& name)
 {
     string pkgname;
     string subname;
@@ -70,27 +88,32 @@ void Package::removePackage(const string& name)
 
     for(int i = 0; i < children.size(); i++)
     {
-        if(dynamic_cast<Package *>(children[i]))
+        if(children[i]->getName() == pkgname)
         {
-            if(children[i]->getName() == pkgname)
+            if(subname.size())
             {
-                if(subname.size())
-                {
+                if(dynamic_cast<Package *>(children[i]))
                     dynamic_cast<Package *>(children[i])->removePackage(subname);
-                }
                 else
-                {
-                    delete children[i];
-                    children.erase(children.begin() + i);
-                }
-                break;  
+                    dynamic_cast<Command *>(children[i])->removeSubCommand(subname);
             }
+            else
+            {
+                delete children[i];
+                children.erase(children.begin() + i);
+            }
+            break;  
         }
     }
-    throw LZException(name + " package not exists on " + getViewFullName() + " package");
+    throw LZException(name + " element not exists on " + getViewFullName() + " package");
 }
 
-bool Package::existsPackage(const std::string& name)
+bool Package::exists(const std::string& name)
+{
+    return get(name);
+}
+
+Packageable *Package::get(const std::string& name)
 {
     string pkgname;
     string subname;
@@ -98,50 +121,23 @@ bool Package::existsPackage(const std::string& name)
 
     for(int i = 0; i < children.size(); i++)
     {
-        if(dynamic_cast<Package *>(children[i]))
+        if(children[i]->getName() == pkgname)
         {
-            if(children[i]->getName() == pkgname)
+            if(subname.size())
             {
-                if(subname.size())
-                {
-                    return dynamic_cast<Package *>(children[i])->existsPackage(subname);
-                }
+                if(dynamic_cast<Package *>(children[i]))
+                    return dynamic_cast<Package *>(children[i])->get(subname);
                 else
-                {
-                    return true;
-                }
-                break;  
+                    return &dynamic_cast<Command *>(children[i])->getSubCommand(subname);
             }
+            else
+            {
+                return dynamic_cast<Package *>(children[i]);
+            }
+            break;  
         }
     }
-    return false;
-}
-
-Package& Package::getPackage(const std::string& name)
-{
-    string pkgname;
-    string subname;
-    extractNames(name, pkgname, subname);
-
-    for(int i = 0; i < children.size(); i++)
-    {
-        if(dynamic_cast<Package *>(children[i]))
-        {
-            if(children[i]->getName() == pkgname)
-            {
-                if(subname.size())
-                {
-                    return dynamic_cast<Package *>(children[i])->getPackage(subname);
-                }
-                else
-                {
-                    return *dynamic_cast<Package *>(children[i]);
-                }
-                break;  
-            }
-        }
-    }
-    throw LZException(name + " package does not exists on " + getViewFullName() + " package");
+    return nullptr;
 }
 
 Command& Package::createCommand(const std::string &name)
@@ -176,83 +172,21 @@ Command& Package::createCommand(const std::string &name)
 
 void Package::removeCommand(const std::string& name)
 {
-    string cmdname;
-    string subname;
-    extractNames(name, cmdname, subname);
-
-    for(int i = 0; i < children.size(); i++)
-    {
-        if(dynamic_cast<Command *>(children[i]))
-        {
-            if(children[i]->getName() == cmdname)
-            {
-                if(subname.size())
-                {
-                    dynamic_cast<Command *>(children[i])->removeSubCommand(subname);
-                }
-                else
-                {
-                    delete children[i];
-                    children.erase(children.begin() + i);
-                }
-                break;  
-            }
-        }
-    }
+    if(existsCommand(name))
+        remove(name);
     throw LZException(name + " command not exists on " + getViewFullName() + " package");
 }
 
 bool Package::existsCommand(const std::string& name)
 {
-    string cmdname;
-    string subname;
-    extractNames(name, cmdname, subname);
-
-    for(int i = 0; i < children.size(); i++)
-    {
-        if(dynamic_cast<Command *>(children[i]))
-        {
-            if(children[i]->getName() == cmdname)
-            {
-                if(subname.size())
-                {
-                    return dynamic_cast<Command *>(children[i])->existsSubCommand(subname);
-                }
-                else
-                {
-                    return true;
-                }
-                break;  
-            }
-        }
-    }
-    return false;
+    return dynamic_cast<Command * >(get(name));
 }
 
 Command& Package::getCommand(const std::string& name)
 {
-    string cmdname;
-    string subname;
-    extractNames(name, cmdname, subname);
-
-    for(int i = 0; i < children.size(); i++)
-    {
-        if(dynamic_cast<Package *>(children[i]))
-        {
-            if(children[i]->getName() == cmdname)
-            {
-                if(subname.size())
-                {
-                    return dynamic_cast<Command *>(children[i])->getSubCommand(subname);
-                }
-                else
-                {
-                    return *dynamic_cast<Command *>(children[i]);
-                }
-                break;  
-            }
-        }
-    }
+    Command *command = dynamic_cast<Command *>(get(name));
+    if(command)
+        return *command;
     throw LZException(name + " command does not exists on " + getViewFullName() + " package");
 }
 

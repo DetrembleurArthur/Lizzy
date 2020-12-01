@@ -27,7 +27,7 @@ string Instruction::getStackTrace(string message) const
 
 void Instruction::throwEx(string message) const
 {
-	LZException(getStackTrace(message));
+	throw LZException(getStackTrace(message));
 }
 
 
@@ -38,16 +38,17 @@ LZDataType *Instruction::getResult() const
 	if(not arguments.empty())
 	{
 		auto len = arguments.size();
-		prototype = arguments[0]->getResult()->getId();
+		LZDataType *result = arguments[0]->getResult();
+		prototype = result->getId();
+		results.push_back(result);
 		for(int i = 1; i < len; i++)
 		{
-			LZDataType *result = arguments[i]->getResult();
+			result = arguments[i]->getResult();
 			prototype += "-" + result->getId();
 			results.push_back(result);
 		}
 	}
-
 	if(protoMap.find(prototype) == protoMap.end())
-		throwEx("has no prototype like " + prototype);
+		throwEx("has no prototype like (" + prototype + ")");
 	return protoMap[prototype](results);
 }

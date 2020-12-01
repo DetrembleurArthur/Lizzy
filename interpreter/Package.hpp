@@ -15,6 +15,9 @@ namespace lizzy
         static Package *create(const std::string& name="lizzy");
         virtual ~Package();
         Package &createPackage(const std::string &pkgname);
+        void remove(const std::string& name);
+        bool exists(const std::string& name);
+        Packageable *get(const std::string& name);
         void removePackage(const std::string& name);
         bool existsPackage(const std::string& name);
         Package& getPackage(const std::string& name);

@@ -20,6 +20,7 @@ namespace lizzy
         ActionBundle();
         void setAction(Action action);
         void setAction(std::vector<std::string>&& prototype, Action);
+        ProtoMap& getProtoMap(int nargs);
 
     };
     
