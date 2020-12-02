@@ -4,57 +4,5 @@ This is a lizzy code
 :)
 */
 
-print.user
-print user
 
-$alias lizzy.std.io.print[$] out
-
-out "Hello world!"
-
-$enable package lizzy
-
-print "hello\nworld!"
-print "\033[91;3mHello!\033[0m"
-
-print hello
-print hello[#]
-
-print$[2] "hello" "world!"
-
-
-thread.thread testTH
-
-	until 0 10
-
-		print "Hello world!"
-
-	end until
-
-thread.end thread
-
-
-thread.join testTH
-
-/*
-
-print pow 5 2 "Arthur"
-//25 Arthur
-
-print
-	pow (?)
-		5, 2 (int, int)
-	"Arthur" (string)
-
-pow has 2 ?
-	pos has int int ?
-
-print has 2 ?
-	print has ? string
-		print has int string ? NO
-		print has float string YES
-
-*/
-
-/*
-root.lizzy.std.math
-*/
+test.cmd.add 666

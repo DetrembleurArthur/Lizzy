@@ -59,16 +59,11 @@ Package& Package::createPackage(const string& name)
                 {
                     return dynamic_cast<Package *>(children[i])->createPackage(subname);
                 }
-                else
-                {
-                    throw LZException(name + " package already exists on " + getViewFullName() + " package");
-                }
             }
         }
         Package *pkg = new Package(pkgname, this);
         children.push_back(pkg);
-        pkg->createPackage(subname);
-        return *pkg;
+        return pkg->createPackage(subname);
     }
     else
     {
@@ -118,7 +113,7 @@ Packageable *Package::get(const std::string& name)
     string pkgname;
     string subname;
     extractNames(name, pkgname, subname);
-
+    cout << "search " << name << " in " << getViewFullName() << " package " << endl;
     for(int i = 0; i < children.size(); i++)
     {
         if(children[i]->getName() == pkgname)
@@ -132,7 +127,8 @@ Packageable *Package::get(const std::string& name)
             }
             else
             {
-                return dynamic_cast<Package *>(children[i]);
+                cout << "found " << children[i]->getViewFullName() << " in " << getViewFullName() << " package" << endl;
+                return children[i];
             }
             break;  
         }

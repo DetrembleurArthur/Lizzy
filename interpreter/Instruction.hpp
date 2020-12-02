@@ -11,15 +11,17 @@ namespace lizzy
     {
     private:
         std::vector<Callable *> arguments;
-        ProtoMap& protoMap;
+        ProtoMap *protoMap;
         Command& command;
         Instruction *super;
     public:
-        Instruction(Command& command, ProtoMap& runnable, Instruction *super=nullptr);
+        Instruction(Command& command);
         Instruction& push(Callable* arg);
         LZDataType *getResult() const override;
         std::string getStackTrace(std::string message="") const;
         void throwEx(std::string message) const noexcept(false);
+        void setSuper(Instruction *super);
+        void setProtoMap(ProtoMap *protoMap);
     };
 }
 

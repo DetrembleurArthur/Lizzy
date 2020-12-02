@@ -29,11 +29,13 @@ namespace lizzy
         void parse(const std::string& expr);
         void merge();
         std::vector<std::string>& getTokens();
+        std::vector<std::string>& getSeparators();
         static std::string& normalize_ctrl_chars(std::string& content);
         static void replace_str_by_str(std::string& content, const std::string& old_c, const std::string& new_c);
         static std::string load_file(const std::string& filename);
         static std::vector<std::string> parse(std::string content, const std::vector<std::string>& separators);
         static std::vector<std::string> merge(const std::vector<std::string>& ref, const std::vector<SolidSeparator>& solidSeparators);
+        static bool isInteger(const std::string& expr);
     };
 }
 

@@ -6,14 +6,16 @@ using namespace lizzy;
 
 
 
-Instruction::Instruction(Command& command, ProtoMap& protoMap, Instruction *super) : protoMap(protoMap), command(command), super(super)
+Instruction::Instruction(Command& command) : protoMap(nullptr), command(command), super(nullptr)
 {
-
+	cout << "instruction for " << command.getViewFullName() << endl;
 }
 
 
 Instruction& Instruction::push(Callable* arg)
 {
+	if(dynamic_cast<Instruction *>(arg))
+		dynamic_cast<Instruction *>(arg)->setSuper(this);
 	arguments.push_back(arg);
 	return *this;
 }
@@ -48,7 +50,17 @@ LZDataType *Instruction::getResult() const
 			results.push_back(result);
 		}
 	}
-	if(protoMap.find(prototype) == protoMap.end())
+	if(protoMap->find(prototype) == protoMap->end())
 		throwEx("has no prototype like (" + prototype + ")");
-	return protoMap[prototype](results);
+	return (*protoMap)[prototype](results);
+}
+
+void Instruction::setSuper(Instruction *super)
+{
+	this->super = super;
+}
+
+void Instruction::setProtoMap(ProtoMap *protoMap)
+{
+	this->protoMap = protoMap;
 }

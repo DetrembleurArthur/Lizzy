@@ -37,3 +37,23 @@ ProtoMap& ActionBundle::getProtoMap(int nargs)
 {
     return bundle[nargs];
 }
+
+bool ActionBundle::existsProtoMap(int nargs) const
+{
+    return bundle.find(nargs) != bundle.end();
+}
+
+int ActionBundle::getMax() const
+{
+    return bundle.empty() ? -2 : bundle.cbegin()->first;
+}
+
+int ActionBundle::getMin() const
+{
+    int mini = -2;
+    for(auto it = bundle.begin(); it != bundle.end(); it++)
+    {
+        mini = it->first;
+    }
+    return mini;
+}

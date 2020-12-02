@@ -25,6 +25,11 @@ vector<string>& Parser::getTokens()
     return tokens;
 }
 
+std::vector<std::string>& Parser::getSeparators()
+{
+    return separators;
+}
+
 string Parser::load_file(const string& filename)
 {
     string content;
@@ -154,3 +159,15 @@ string& Parser::normalize_ctrl_chars(string& content)
     replace_str_by_str(content, "\\0", "\0");
     return content;
 }
+
+bool Parser::isInteger(const string& expr)
+{
+    auto len = expr.size();
+	for(int i = expr[0] == '-'; i < len; i++)
+	{
+		if(not isdigit(expr[i]))
+            return false;
+	}
+	return true;
+}
+

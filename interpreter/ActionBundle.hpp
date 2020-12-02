@@ -21,6 +21,9 @@ namespace lizzy
         void setAction(Action action);
         void setAction(std::vector<std::string>&& prototype, Action);
         ProtoMap& getProtoMap(int nargs);
+        bool existsProtoMap(int nargs) const;
+        int getMax() const;
+        int getMin() const;
 
     };
     

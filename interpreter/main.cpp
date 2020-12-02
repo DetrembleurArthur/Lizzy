@@ -3,61 +3,31 @@
 #include <map>
 #include <iostream>
 #include <type_traits>
-#include "Package.hpp"
-#include "Instruction.hpp"
+#include "Interpreter.hpp"
 
 using namespace std;
 using namespace lizzy;
 
 
 int main(int argc, char const *argv[])
-{/*
-    Parser parser;
-    parser.parse(Parser::load_file("main.lz"));
-
-
-    for(const auto& token : parser.getTokens())
-    {
-        cout << "> " << token << endl;
-    }
-
-    cout << "########" << endl;
-    parser.merge();
-
-    for(const auto& token : parser.getTokens())
-    {
-        cout << "> " << token << endl;
-    }
-*/
+{
     try
     {
-        Package *package = Package::create();
-        
-        package->createCommand("print.hello").getActionBundle().setAction({typeid(LZDataType).name()}, [](Arguments args){
-            cout << "Hello world! " << args.size() << endl;
+        Interpreter interpreter;
+        interpreter.getRootPackage().createPackage("test.cmd")
+        .createCommand("add").getActionBundle().setAction({typeid(LZDataType).name()}, [](Arguments)
+        {
             return (LZDataType *)nullptr;
         });
 
-        auto& cmd = package->getCommand("print.hello");
-        Instruction *instr = new Instruction(cmd, cmd.getActionBundle().getProtoMap(1));
-        LZDataType *data = new LZDataType();
-        Argument *arg = new Argument(data);
+        interpreter.parseFile("main.lz");
 
-        instr->push(arg);
+        interpreter.run();
         
-        instr->getResult();
-
-        delete arg;
-
-        delete data;
-        
-        delete instr;
-
-        delete package;
     }
     catch(const LZException& e)
     {
-        cout << e.getMessage() << endl;
+        cout << "ERR: " << e.getMessage() << endl;
     }
 
     
