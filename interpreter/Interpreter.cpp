@@ -126,10 +126,10 @@ Attributes Interpreter::selectAttributes(std::string& expr)
     return Attributes(attributeParser.getTokens());
 }
 
-Instruction *Interpreter::buildInstruction(Command& command, const Attributes& attribute, vector<string>& tokens)
+Instruction *Interpreter::buildInstruction(Command *command, const Attributes& attribute, vector<string>& tokens)
 {
     cerr << "BEG INSTRUCTION"<<endl;
-    ActionBundle& actionBundle = command.getActionBundle();
+    ActionBundle& actionBundle = command->getActionBundle();
     int nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMin() : attribute.getNParam();
     if(tokens.size() >= nargsGuard)
     {
@@ -143,21 +143,29 @@ Instruction *Interpreter::buildInstruction(Command& command, const Attributes& a
                 string subname = tokens[0];
 
                 Attributes subAttr = selectAttributes(subname);
-                if(command.existsSubCommand(subname))
+                if(command->existsSubCommand(subname))
                 {
                     tokens.erase(tokens.begin());
-                    return buildInstruction(command.getSubCommand(subname), subAttr, tokens);
+                    return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
                 }
             }
             
             instruction = new Instruction(command);
+
+            vector<Command *> occurences;
+            
             for(int i = 0; i < nargsGuard; i++, tokens.erase(tokens.begin()))
             {
                 string arg = tokens[0];
                 Attributes argAttr = selectAttributes(arg);
-                if(rootPackage->existsCommand(arg))
+
+                occurences.clear();
+                rootPackage->search(arg, occurences);
+                Command *command = occurences.size() ? occurences.front() : nullptr;
+                
+                if(command)
                 {
-                    instruction->push(buildInstruction(rootPackage->getCommand(arg), argAttr, tokens));
+                    instruction->push(buildInstruction(command, argAttr, tokens));
                 }
                 else
                 {
@@ -175,12 +183,12 @@ Instruction *Interpreter::buildInstruction(Command& command, const Attributes& a
         }
         else
         {
-            throw LZException(to_string(nargsGuard) + " number of arguments is not available for " + command.getViewFullName() + " command");
+            throw LZException(to_string(nargsGuard) + " number of arguments is not available for " + command->getViewFullName() + " command");
         }
     }
     else
     {
-        throw LZException(command.getViewFullName() + " has " + to_string(nargsGuard) + " min arguments but instruction has " + to_string(tokens.size()));  
+        throw LZException(command->getViewFullName() + " has " + to_string(nargsGuard) + " min arguments but instruction has " + to_string(tokens.size()));  
     }
 }
 
@@ -195,6 +203,9 @@ Instruction *Interpreter::buildInstruction(vector<string>& tokens)
 
     cout << "COMMAND: " << cmdName << endl;
 
-    Command& command = rootPackage->getCommand(cmdName);
+    vector<Command *> occurences;
+    rootPackage->search(cmdName, occurences);
+    rootPackage->searchExceptionThrowing(cmdName, occurences);
+    Command *command = occurences.front();
     return buildInstruction(command, attr, tokens);
 }

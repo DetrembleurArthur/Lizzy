@@ -28,7 +28,7 @@ namespace lizzy
         int iptr;
         Attributes selectAttributes(std::string& expr);
         Instruction *buildInstruction(std::vector<std::string>& tokens);
-        Instruction *buildInstruction(Command& command, const Attributes& attr, std::vector<std::string>& tokens);
+        Instruction *buildInstruction(Command *command, const Attributes& attr, std::vector<std::string>& tokens);
         Argument *inferSymbol(const std::string& symbol);
     public:
         static const int NULL_IPTR;

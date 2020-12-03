@@ -12,10 +12,10 @@ namespace lizzy
     private:
         std::vector<Callable *> arguments;
         ProtoMap *protoMap;
-        Command& command;
+        Command *command;
         Instruction *super;
     public:
-        Instruction(Command& command);
+        Instruction(Command *command);
         Instruction& push(Callable* arg);
         LZDataType *getResult() const override;
         std::string getStackTrace(std::string message="") const;

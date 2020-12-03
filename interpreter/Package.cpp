@@ -35,12 +35,9 @@ bool Package::existsPackage(const std::string& name)
     return dynamic_cast<Package * >(get(name));
 }
 
-Package& Package::getPackage(const std::string& name)
+Package *Package::getPackage(const std::string& name)
 {
-    Package *package = dynamic_cast<Package *>(get(name));
-    if(package)
-        return *package;
-    throw LZException(name + " package does not exists on " + getViewFullName() + " package");
+    return dynamic_cast<Package *>(get(name));
 }
 
 Package& Package::createPackage(const string& name)
@@ -113,7 +110,7 @@ Packageable *Package::get(const std::string& name)
     string pkgname;
     string subname;
     extractNames(name, pkgname, subname);
-    cout << "search " << name << " in " << getViewFullName() << " package " << endl;
+    cout << "get " << name << " in " << getViewFullName() << " package " << endl;
     for(int i = 0; i < children.size(); i++)
     {
         if(children[i]->getName() == pkgname)
@@ -123,7 +120,7 @@ Packageable *Package::get(const std::string& name)
                 if(dynamic_cast<Package *>(children[i]))
                     return dynamic_cast<Package *>(children[i])->get(subname);
                 else
-                    return &dynamic_cast<Command *>(children[i])->getSubCommand(subname);
+                    return dynamic_cast<Command *>(children[i])->getSubCommand(subname);
             }
             else
             {
@@ -134,6 +131,46 @@ Packageable *Package::get(const std::string& name)
         }
     }
     return nullptr;
+}
+
+void Package::search(const std::string& name, std::vector<Command *>& occurences)
+{
+    cout << "search " << name << " in " << getViewFullName() << " package " << endl;
+
+    Command *cmd = getCommand(name);
+    if(not cmd)
+    {
+        for(int i = 0; i < children.size(); i++)
+        {
+            if(dynamic_cast<Package *>(children[i]))
+            {
+                dynamic_cast<Package *>(children[i])->search(name, occurences);
+            }
+        }
+    }
+    else
+    {
+        occurences.push_back(cmd);
+    }
+}
+
+
+void Package::searchExceptionThrowing(const std::string& name, std::vector<Command *>& occurences)
+{
+    switch(occurences.size())
+    {
+        case 0:
+            throw LZException("no " + name + " command found through " + getViewFullName() + " package");
+        case 1:
+            break;
+        default:
+            string buffer = "multiple occurence of " + name + " command through " + getViewFullName() + " package:\n";
+            for(auto c : occurences)
+            {
+                buffer += "\t" + c->getViewFullName() + "\n";
+            }
+            throw LZException(buffer);
+    }
 }
 
 Command& Package::createCommand(const std::string &name)
@@ -178,12 +215,9 @@ bool Package::existsCommand(const std::string& name)
     return dynamic_cast<Command * >(get(name));
 }
 
-Command& Package::getCommand(const std::string& name)
+Command *Package::getCommand(const std::string& name)
 {
-    Command *command = dynamic_cast<Command *>(get(name));
-    if(command)
-        return *command;
-    throw LZException(name + " command does not exists on " + getViewFullName() + " package");
+    return dynamic_cast<Command *>(get(name));
 }
 
 std::string Package::getViewFullName() const

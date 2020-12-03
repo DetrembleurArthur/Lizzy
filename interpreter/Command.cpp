@@ -85,7 +85,7 @@ void Command::removeSubCommand(const std::string& name)
     throw LZException(name + " subcommand not exists on " + getViewFullName() + " command");
 }
 
-Command& Command::getSubCommand(const std::string& name)
+Command *Command::getSubCommand(const std::string& name)
 {
     string cmdname;
     string subname;
@@ -100,7 +100,7 @@ Command& Command::getSubCommand(const std::string& name)
             }
             else
             {
-                return *sub;
+                return sub;
             }
         }
     }

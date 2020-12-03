@@ -19,7 +19,7 @@ namespace lizzy
         ActionBundle& getActionBundle();
         Command& createSubCommand(const std::string& name);
         void removeSubCommand(const std::string& name);
-        Command& getSubCommand(const std::string& name);
+        Command *getSubCommand(const std::string& name);
         bool existsSubCommand(const std::string& name);
         std::string getViewFullName() const override;
     };

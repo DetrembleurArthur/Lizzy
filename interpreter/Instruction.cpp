@@ -6,9 +6,9 @@ using namespace lizzy;
 
 
 
-Instruction::Instruction(Command& command) : protoMap(nullptr), command(command), super(nullptr)
+Instruction::Instruction(Command *command) : protoMap(nullptr), command(command), super(nullptr)
 {
-	cout << "instruction for " << command.getViewFullName() << endl;
+	cout << "instruction for " << command->getViewFullName() << endl;
 }
 
 
@@ -24,7 +24,7 @@ Instruction& Instruction::push(Callable* arg)
 
 string Instruction::getStackTrace(string message) const
 {
-	return command.getFullName() + "(" + to_string(arguments.size()) + ") : " + message + (super ? "\n" + super->getStackTrace() : "\n");
+	return command->getFullName() + "(" + to_string(arguments.size()) + ") : " + message + (super ? "\n" + super->getStackTrace() : "\n");
 }
 
 void Instruction::throwEx(string message) const
