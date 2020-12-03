@@ -29,7 +29,7 @@ void ActionBundle::setAction(vector<string>&& prototype, Action action)
             proto_str += "-" + prototype[i];
         }
     }
-    cout << len << " :: " << proto_str << endl;
+    Debug::loginfo("define action: " + to_string(len) + " : " + proto_str);
     bundle[len][proto_str] = action;
 }
 

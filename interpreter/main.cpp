@@ -4,6 +4,7 @@
 #include <iostream>
 #include <type_traits>
 #include "Interpreter.hpp"
+#include "Debug.hpp"
 
 using namespace std;
 using namespace lizzy;

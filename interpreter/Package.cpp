@@ -11,7 +11,7 @@ Package *Package::create(const std::string& name)
 
 Package::Package(const string& name, const Packageable* super) : Packageable(name, super)
 {
-    
+    Debug::loginfo("create package: " + getViewFullName());
 }
 
 Package::~Package()
@@ -20,7 +20,7 @@ Package::~Package()
     {
         delete child;
     }
-    cout << "clear package " << getViewFullName() << endl;
+    Debug::loginfo("destroy package: " + getViewFullName());
 }
 
 void Package::removePackage(const std::string& name)
@@ -110,7 +110,6 @@ Packageable *Package::get(const std::string& name)
     string pkgname;
     string subname;
     extractNames(name, pkgname, subname);
-    cout << "get " << name << " in " << getViewFullName() << " package " << endl;
     for(int i = 0; i < children.size(); i++)
     {
         if(children[i]->getName() == pkgname)
@@ -124,7 +123,6 @@ Packageable *Package::get(const std::string& name)
             }
             else
             {
-                cout << "found " << children[i]->getViewFullName() << " in " << getViewFullName() << " package" << endl;
                 return children[i];
             }
             break;  
@@ -135,8 +133,6 @@ Packageable *Package::get(const std::string& name)
 
 void Package::search(const std::string& name, std::vector<Command *>& occurences)
 {
-    cout << "search " << name << " in " << getViewFullName() << " package " << endl;
-
     Command *cmd = getCommand(name);
     if(not cmd)
     {

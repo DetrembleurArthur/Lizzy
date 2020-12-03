@@ -19,7 +19,6 @@ Attributes::Attributes(std::vector<std::string>& tokens)
             root = true;
         }
     }
-    cout << "ATTR{" << nparam << ", " << root << "}" << endl;
 }
 
 int Attributes::getNParam() const
@@ -92,27 +91,33 @@ void Interpreter::flushInstructions()
 
 void Interpreter::parseFile(const std::string& filename)
 {
+    Debug::loginfo("load file " + filename);
     parse(Parser::load_file(filename));
 }
 
 void Interpreter::parse(const std::string& code)
 {
+    Debug::loginfo("parse");
     parser.parse(code);
+    Debug::loginfo("merge");
     parser.merge();
 }
 
 void Interpreter::run()
 {
+    Debug::loginfo("run interpreter");
     vector<string> tokens = parser.getTokens();
     while(tokens.size())
     {
+        Debug::loginfo("build new instruction");
         instructions.push_back(buildInstruction(tokens));
+        Debug::loginfo("instruction builded: " + instructions.back()->getStackTrace());
     }
 }
 
 Argument *Interpreter::inferSymbol(const std::string& symbol)
 {
-    cout << "infer symbol " << symbol << endl;
+    Debug::loginfo("infer symbol " + symbol);
     return (Argument *)nullptr;
 }
 
@@ -128,13 +133,13 @@ Attributes Interpreter::selectAttributes(std::string& expr)
 
 Instruction *Interpreter::buildInstruction(Command *command, const Attributes& attribute, vector<string>& tokens)
 {
-    cerr << "BEG INSTRUCTION"<<endl;
+    Debug::loginfo("build instruction with " + command->getViewFullName());
     ActionBundle& actionBundle = command->getActionBundle();
     int nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMin() : attribute.getNParam();
     if(tokens.size() >= nargsGuard)
     {
         nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMax() : attribute.getNParam();
-        cout << "ARGS: " << nargsGuard << endl;
+        Debug::loginfo("arguments: " + to_string(nargsGuard));
         Instruction *instruction = nullptr;
         if(tokens.size() > 0)
         {
@@ -146,38 +151,48 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                 if(command->existsSubCommand(subname))
                 {
                     tokens.erase(tokens.begin());
+                    Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
                     return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
                 }
             }
             
+            Debug::loginfo(command->getViewFullName() + " is root command");
+
             instruction = new Instruction(command);
 
             vector<Command *> occurences;
             
-            for(int i = 0; i < nargsGuard; i++, tokens.erase(tokens.begin()))
+            for(int i = 0; i < nargsGuard; i++)
             {
                 string arg = tokens[0];
+                tokens.erase(tokens.begin());
+                
                 Attributes argAttr = selectAttributes(arg);
 
                 occurences.clear();
+
+                Debug::loginfo("search command for " + arg);
                 rootPackage->search(arg, occurences);
                 Command *command = occurences.size() ? occurences.front() : nullptr;
                 
                 if(command)
                 {
+                    Debug::loginfo("command found: " + command->getViewFullName());
                     instruction->push(buildInstruction(command, argAttr, tokens));
                 }
                 else
                 {
+                    Debug::loginfo("simple symbol found: " + arg);
                     instruction->push(inferSymbol(arg));
                 }
             }
         }
         if(not instruction)
             instruction = new Instruction(command);
+
+        Debug::loginfo("check protoMap for " + to_string(nargsGuard));
         if(actionBundle.existsProtoMap(nargsGuard))
         {
-            cout << "instruction builded" << endl;
             instruction->setProtoMap(&actionBundle.getProtoMap(nargsGuard));
             return instruction;
         }
@@ -201,7 +216,7 @@ Instruction *Interpreter::buildInstruction(vector<string>& tokens)
 
     const Attributes& attr = selectAttributes(cmdName);
 
-    cout << "COMMAND: " << cmdName << endl;
+    Debug::loginfo("search " + cmdName +  " command");
 
     vector<Command *> occurences;
     rootPackage->search(cmdName, occurences);

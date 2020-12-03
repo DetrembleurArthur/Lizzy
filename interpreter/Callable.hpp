@@ -8,6 +8,7 @@ namespace lizzy
     class Callable
     {
     public:
+        virtual ~Callable();
         virtual LZDataType *getResult() const = 0;
     };
 }

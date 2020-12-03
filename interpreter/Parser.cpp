@@ -40,7 +40,6 @@ string Parser::load_file(const string& filename)
         while(getline(file, buffer))
         {
             content += buffer.substr(0, buffer.find("//")) + "\n";
-            cout << ":: " << content << endl;
         }
     }
     return content;

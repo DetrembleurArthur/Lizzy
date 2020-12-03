@@ -7,7 +7,7 @@ using namespace lizzy;
 
 Command::Command(const std::string &name, const Packageable *super) : Packageable(name, super), actionBundle(nullptr)
 {
-    
+    Debug::loginfo("create command: " + getViewFullName());
 }
 
 Command::~Command()
@@ -20,7 +20,7 @@ Command::~Command()
     {
         delete sub;
     }
-    cout << "clear command " << getViewFullName() << endl;
+    Debug::loginfo("destroy command: " + getViewFullName());
 }
 
 ActionBundle& Command::getActionBundle()

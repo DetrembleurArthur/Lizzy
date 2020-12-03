@@ -16,6 +16,7 @@ namespace lizzy
         Instruction *super;
     public:
         Instruction(Command *command);
+        virtual ~Instruction();
         Instruction& push(Callable* arg);
         LZDataType *getResult() const override;
         std::string getStackTrace(std::string message="") const;

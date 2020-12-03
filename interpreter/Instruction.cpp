@@ -8,15 +8,28 @@ using namespace lizzy;
 
 Instruction::Instruction(Command *command) : protoMap(nullptr), command(command), super(nullptr)
 {
-	cout << "instruction for " << command->getViewFullName() << endl;
+	Debug::loginfo("create instruction: " + command->getViewFullName());
+}
+
+Instruction::~Instruction()
+{
+	for(Callable *c : arguments)
+	{
+		delete c;
+	}
+	Debug::loginfo("destroy instruction: " + getStackTrace());
 }
 
 
 Instruction& Instruction::push(Callable* arg)
 {
-	if(dynamic_cast<Instruction *>(arg))
-		dynamic_cast<Instruction *>(arg)->setSuper(this);
 	arguments.push_back(arg);
+	if(dynamic_cast<Instruction *>(arg))
+	{
+		dynamic_cast<Instruction *>(arg)->setSuper(this);
+		Debug::loginfo("push instruction:\n" + dynamic_cast<Instruction *>(arg)->getStackTrace());
+	}
+	Debug::loginfo("push argument");
 	return *this;
 }
 
@@ -24,7 +37,7 @@ Instruction& Instruction::push(Callable* arg)
 
 string Instruction::getStackTrace(string message) const
 {
-	return command->getFullName() + "(" + to_string(arguments.size()) + ") : " + message + (super ? "\n" + super->getStackTrace() : "\n");
+	return command->getViewFullName() + "(" + to_string(arguments.size()) + ") " + message + (super ? "\n\t" + super->getStackTrace() : "");
 }
 
 void Instruction::throwEx(string message) const
@@ -52,6 +65,8 @@ LZDataType *Instruction::getResult() const
 	}
 	if(protoMap->find(prototype) == protoMap->end())
 		throwEx("has no prototype like (" + prototype + ")");
+
+	Debug::loginfo("execute instruction: " + prototype);
 	return (*protoMap)[prototype](results);
 }
 
