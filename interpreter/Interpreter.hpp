@@ -38,7 +38,8 @@ namespace lizzy
         Parser& getParser();
         void parseFile(const std::string& filename);
         void parse(const std::string& code);
-        void run();
+        void execute();
+        void prefetch();
         const std::vector<LZDataType *>& getLostResults() const;
         void flushLostResults();
         const std::vector<Instruction *>& getInstructions() const;

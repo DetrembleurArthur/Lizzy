@@ -36,43 +36,11 @@ namespace lizzy
         static std::vector<std::string> parse(std::string content, const std::vector<std::string>& separators);
         static std::vector<std::string> merge(const std::vector<std::string>& ref, const std::vector<SolidSeparator>& solidSeparators);
         static bool isInteger(const std::string& expr);
+        static bool isFloat(const std::string& expr);
+        static bool isBool(const std::string& expr);
+        static bool isString(const std::string& expr);
+        static bool isConst(const std::string& expr);
     };
 }
 
 #endif
-/*
-
-bool Recognizer::isInteger(const string& expr)
-{
-    auto len = expr.size();
-	for(int i = expr[0] == '-'; i < len; i++)
-	{
-		if(not isdigit(expr[i]))
-            return false;
-	}
-	return true;
-}
-
-bool Recognizer::isFloat(const string& expr)
-{
-    auto len = expr.size();
-	int ptCounter = 0;
-	for(int i = expr[0] == '-'; i < len; i++)
-	{
-		if(not isdigit(expr[i]))
-		{
-			if(i != 0 and i != len - 1 and ptCounter == 0 and expr[i] == '.')
-			{
-				ptCounter++;
-			}
-			else
-			{
-                
-				return false;
-			}
-		}
-	}
-	return true;
-}
-
-*/

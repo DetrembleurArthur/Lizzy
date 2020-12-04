@@ -19,6 +19,7 @@ namespace lizzy
         virtual std::string getId() const final;
         void *getValue() const;
         void setValue(void *value);
+        std::string toString();
     };
 }
 

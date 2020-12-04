@@ -38,3 +38,8 @@ void LZDataType::setValue(void *value)
         free(this->value);
     this->value = value;
 }
+
+std::string LZDataType::toString()
+{
+    return "[LZDataType]@" + getId();
+}

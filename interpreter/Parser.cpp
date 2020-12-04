@@ -170,3 +170,43 @@ bool Parser::isInteger(const string& expr)
 	return true;
 }
 
+bool Parser::isFloat(const string& expr)
+{
+    auto len = expr.size();
+	int ptCounter = 0;
+	for(int i = expr[0] == '-'; i < len; i++)
+	{
+		if(not isdigit(expr[i]))
+		{
+			if(i != 0 and i != len - 1 and ptCounter == 0 and expr[i] == '.')
+			{
+				ptCounter++;
+			}
+			else
+			{
+                
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+bool Parser::isBool(const string& expr)
+{
+    return expr == "true" or expr == "false";
+}
+
+bool Parser::isString(const string& expr)
+{
+    if(expr.size() >= 2)
+    {
+        return (expr.front() == '\"' and expr.back() == '\"') or (expr.front() == '\'' and expr.back() == '\'');
+    }
+    return false;
+}
+
+bool Parser::isConst(const string& expr)
+{
+    return isBool(expr) or isString(expr) or isInteger(expr) or isFloat(expr);
+}

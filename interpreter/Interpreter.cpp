@@ -103,7 +103,7 @@ void Interpreter::parse(const std::string& code)
     parser.merge();
 }
 
-void Interpreter::run()
+void Interpreter::prefetch()
 {
     Debug::loginfo("run interpreter");
     vector<string> tokens = parser.getTokens();
@@ -115,10 +115,21 @@ void Interpreter::run()
     }
 }
 
+void Interpreter::execute()
+{
+    Debug::loginfo("execution...\n\n");
+    for(iptr = 0; iptr < instructions.size(); iptr++)
+    {
+        LZDataType *result = instructions[iptr]->getResult();
+        if(result)
+            lostResults.push_back(result);
+    }
+}
+
 Argument *Interpreter::inferSymbol(const std::string& symbol)
 {
     Debug::loginfo("infer symbol " + symbol);
-    return (Argument *)nullptr;
+    return new Argument(new LZDataType());
 }
 
 Attributes Interpreter::selectAttributes(std::string& expr)
@@ -136,7 +147,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
     Debug::loginfo("build instruction with " + command->getViewFullName());
     ActionBundle& actionBundle = command->getActionBundle();
     int nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMin() : attribute.getNParam();
-    if(tokens.size() >= nargsGuard)
+    if(tokens.size() >= nargsGuard || nargsGuard == -2)
     {
         nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMax() : attribute.getNParam();
         Debug::loginfo("arguments: " + to_string(nargsGuard));
@@ -148,6 +159,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                 string subname = tokens[0];
 
                 Attributes subAttr = selectAttributes(subname);
+                Debug::loginfo("search subcommand: " + subname);
                 if(command->existsSubCommand(subname))
                 {
                     tokens.erase(tokens.begin());
@@ -167,23 +179,31 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                 string arg = tokens[0];
                 tokens.erase(tokens.begin());
                 
-                Attributes argAttr = selectAttributes(arg);
 
-                occurences.clear();
-
-                Debug::loginfo("search command for " + arg);
-                rootPackage->search(arg, occurences);
-                Command *command = occurences.size() ? occurences.front() : nullptr;
-                
-                if(command)
+                if(Parser::isConst(arg))
                 {
-                    Debug::loginfo("command found: " + command->getViewFullName());
-                    instruction->push(buildInstruction(command, argAttr, tokens));
+                    Debug::loginfo("simple constant found: " + arg);
+                    instruction->push(inferSymbol(arg));
                 }
                 else
                 {
-                    Debug::loginfo("simple symbol found: " + arg);
-                    instruction->push(inferSymbol(arg));
+                    Attributes argAttr = selectAttributes(arg);
+
+                    occurences.clear();
+
+                    Debug::loginfo("search command for " + arg);
+                    rootPackage->search(arg, occurences);
+                    Command *command = occurences.size() ? occurences.front() : nullptr;
+                    
+                    if(command)
+                    {
+                        Debug::loginfo("command found: " + command->getViewFullName());
+                        instruction->push(buildInstruction(command, argAttr, tokens));
+                    }
+                    else
+                    {
+                        throw LZException("unknown symbol found: " + arg);
+                    }
                 }
             }
         }

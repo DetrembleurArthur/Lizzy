@@ -10,25 +10,41 @@ using namespace std;
 using namespace lizzy;
 
 
+
+namespace api
+{
+    LZDataType *print(Arguments args)
+    {
+        for(auto *lz : args)
+        {
+            cout << lz->toString() << endl;
+        }
+        return (LZDataType *)nullptr;
+    }
+}
+
+
 int main(int argc, char const *argv[])
 {
     try
     {
         Interpreter interpreter;
-        interpreter.getRootPackage().createPackage("test.cmd")
-        .createCommand("add").getActionBundle().setAction({typeid(LZDataType).name()}, [](Arguments)
-        {
-            return (LZDataType *)nullptr;
-        });
+        interpreter.getRootPackage().createPackage("std.io");
+        interpreter.getRootPackage().createPackage("user.custom");
+        interpreter.getRootPackage().createPackage("user.func");
+        interpreter.getRootPackage().getPackage("std.io")->createCommand("print")
+        .getActionBundle().setAction({typeid(LZDataType).name(), typeid(LZDataType).name()}, api::print);
 
         interpreter.parseFile("main.lz");
 
-        interpreter.run();
+        interpreter.prefetch();
+
+        interpreter.execute();
         
     }
     catch(const LZException& e)
     {
-        cout << "ERR: " << e.getMessage() << endl;
+        Debug::logerr(e.getMessage());
     }
 
     
