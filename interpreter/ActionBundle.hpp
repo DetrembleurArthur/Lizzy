@@ -9,7 +9,7 @@ namespace lizzy
 {
 	typedef const std::vector<LZDataType *>& Arguments;
 	typedef LZDataType *(*Action)(Arguments);
-    typedef std::map<std::string, Action> ProtoMap;
+    typedef std::map<size_t, Action> ProtoMap;
 
     class ActionBundle
     {

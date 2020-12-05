@@ -21,6 +21,12 @@ string LZDataType::getId() const
     return typeid(*this).name();
 }
 
+size_t LZDataType::getHashCode() const
+{
+    hash<string> hashGen;
+    return hashGen(getId());
+}
+
 
 std::string LZDataType::toString()
 {

@@ -1,6 +1,7 @@
 #ifndef LZ_DATA_TYPE_HPP
 #define LZ_DATA_TYPE_HPP
 #include <type_traits>
+#include <functional>
 #include "../Debug.hpp"
 #include "../Exceptions.hpp"
 
@@ -14,6 +15,7 @@ namespace lizzy
         LZDataType();
         virtual ~LZDataType();
         virtual std::string getId() const final;
+        virtual size_t getHashCode() const final;
         virtual std::string toString();
         virtual int toInt();
         virtual double toFloat();

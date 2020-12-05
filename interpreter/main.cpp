@@ -3,6 +3,7 @@
 #include <map>
 #include <iostream>
 #include <type_traits>
+#include <functional>
 #include "Interpreter.hpp"
 #include "Debug.hpp"
 #include "types/LZPrimitive.hpp"

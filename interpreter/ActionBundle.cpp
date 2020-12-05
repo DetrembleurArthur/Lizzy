@@ -13,7 +13,8 @@ ActionBundle::ActionBundle()
 
 void ActionBundle::setAction(Action action)
 {
-    bundle[UNDEFINED_NUMBER_OF_ARGUMENTS][""] = action;
+    hash<string> hashGen;
+    bundle[UNDEFINED_NUMBER_OF_ARGUMENTS][hashGen("")] = action;
 }
 
 void ActionBundle::setAction(vector<string>&& prototype, Action action)
@@ -26,11 +27,12 @@ void ActionBundle::setAction(vector<string>&& prototype, Action action)
         auto len = prototype.size();
         for(int i = 1; i < len; i++)
         {
-            proto_str += "-" + prototype[i];
+            proto_str += "&" + prototype[i];
         }
     }
-    Debug::loginfo("define action: " + to_string(len) + " : " + proto_str);
-    bundle[len][proto_str] = action;
+    hash<string> hashGen;
+    bundle[len][hashGen(proto_str)] = action;
+    Debug::loginfo("define action: " + to_string(len) + " : " + proto_str + " : " + to_string(hashGen(proto_str)));
 }
 
 ProtoMap& ActionBundle::getProtoMap(int nargs)

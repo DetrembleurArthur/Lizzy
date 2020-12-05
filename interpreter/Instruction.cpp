@@ -59,15 +59,17 @@ LZDataType *Instruction::getResult() const
 		for(int i = 1; i < len; i++)
 		{
 			result = arguments[i]->getResult();
-			prototype += "-" + result->getId();
+			prototype += "&" + result->getId();
 			results.push_back(result);
 		}
 	}
-	if(protoMap->find(prototype) == protoMap->end())
+	hash<string> hashGen;
+	size_t hash = hashGen(prototype);
+	if(protoMap->find(hash) == protoMap->end())
 		throwEx("has no prototype like (" + prototype + ")");
 
 	Debug::loginfo("execute instruction: " + prototype);
-	return (*protoMap)[prototype](results);
+	return (*protoMap)[hash](results);
 }
 
 void Instruction::setSuper(Instruction *super)
