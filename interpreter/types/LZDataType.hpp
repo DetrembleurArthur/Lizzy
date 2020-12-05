@@ -10,16 +10,18 @@ namespace lizzy
 {
     class LZDataType
     {
-    private:
-        void *value;
     public:
         LZDataType();
-        LZDataType(void *ptr);
         virtual ~LZDataType();
         virtual std::string getId() const final;
-        void *getValue() const;
-        void setValue(void *value);
-        std::string toString();
+        virtual std::string toString();
+        virtual int toInt();
+        virtual double toFloat();
+        virtual bool toBool();
+        template <class LZ> operator LZ*()
+        {
+            return dynamic_cast<LZ *>(this);
+        }
     };
 }
 

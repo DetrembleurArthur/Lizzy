@@ -3,6 +3,7 @@
 #include "Package.hpp"
 #include "Parser.hpp"
 #include "Instruction.hpp"
+#include "types/LZPrimitive.hpp"
 #include <assert.h>
 
 

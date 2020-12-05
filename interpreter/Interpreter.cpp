@@ -129,7 +129,12 @@ void Interpreter::execute()
 Argument *Interpreter::inferSymbol(const std::string& symbol)
 {
     Debug::loginfo("infer symbol " + symbol);
-    return new Argument(new LZDataType());
+    LZDataType *lz = nullptr;
+    if(Parser::isString(symbol)) lz = new LZPrimitive<string>(symbol);
+    else if(Parser::isBool(symbol)) lz = new LZPrimitive<bool>(symbol == "true");
+    else if(Parser::isInteger(symbol)) lz = new LZPrimitive<long>(std::atoi(symbol.c_str()));
+    else if(Parser::isFloat(symbol)) lz = new LZPrimitive<double>(std::atof(symbol.c_str()));
+    return new Argument(lz);
 }
 
 Attributes Interpreter::selectAttributes(std::string& expr)

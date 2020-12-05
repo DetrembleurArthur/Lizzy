@@ -5,6 +5,7 @@
 #include <type_traits>
 #include "Interpreter.hpp"
 #include "Debug.hpp"
+#include "types/LZPrimitive.hpp"
 
 using namespace std;
 using namespace lizzy;
@@ -15,10 +16,9 @@ namespace api
 {
     LZDataType *print(Arguments args)
     {
-        for(auto *lz : args)
-        {
-            cout << lz->toString() << endl;
-        }
+        LZPrimitive<string> *msg = *args[0];
+        LZPrimitive<double> *l = *args[1];
+        cout << msg->getValue() << " " << l->getValue() << endl;
         return (LZDataType *)nullptr;
     }
 }
@@ -26,6 +26,7 @@ namespace api
 
 int main(int argc, char const *argv[])
 {
+
     try
     {
         Interpreter interpreter;
@@ -33,7 +34,7 @@ int main(int argc, char const *argv[])
         interpreter.getRootPackage().createPackage("user.custom");
         interpreter.getRootPackage().createPackage("user.func");
         interpreter.getRootPackage().getPackage("std.io")->createCommand("print")
-        .getActionBundle().setAction({typeid(LZDataType).name(), typeid(LZDataType).name()}, api::print);
+        .getActionBundle().setAction({typeid(LZPrimitive<string>).name(), typeid(LZPrimitive<double>).name()}, api::print);
 
         interpreter.parseFile("main.lz");
 
