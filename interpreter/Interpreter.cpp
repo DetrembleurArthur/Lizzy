@@ -117,7 +117,7 @@ void Interpreter::prefetch()
 
 void Interpreter::execute()
 {
-    Debug::loginfo("execution...\n\n");
+    Debug::loginfo("execution...");
     for(iptr = 0; iptr < instructions.size(); iptr++)
     {
         LZDataType *result = instructions[iptr]->getResult();
@@ -147,43 +147,42 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
     Debug::loginfo("build instruction with " + command->getViewFullName());
     ActionBundle& actionBundle = command->getActionBundle();
     int nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMin() : attribute.getNParam();
-    if(tokens.size() >= nargsGuard || nargsGuard == -2)
+    if(tokens.size() >= nargsGuard || nargsGuard < 0)
     {
         nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMax() : attribute.getNParam();
         Debug::loginfo("arguments: " + to_string(nargsGuard));
         Instruction *instruction = nullptr;
         if(tokens.size() > 0)
         {
-            if(not attribute.isRoot())
-            {
-                string subname = tokens[0];
-
-                Attributes subAttr = selectAttributes(subname);
-                Debug::loginfo("search subcommand: " + subname);
-                if(command->existsSubCommand(subname))
-                {
-                    tokens.erase(tokens.begin());
-                    Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
-                    return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
-                }
-            }
-            
-            Debug::loginfo(command->getViewFullName() + " is root command");
-
-            instruction = new Instruction(command);
-
             vector<Command *> occurences;
             
-            for(int i = 0; i < nargsGuard; i++)
+            for(int i = 0; i < nargsGuard or (nargsGuard == -1 and not tokens.empty()); i++)
             {
                 string arg = tokens[0];
                 tokens.erase(tokens.begin());
+
+                if(nargsGuard == -1 and arg == "*")
+                    break;
                 
 
                 if(Parser::isConst(arg))
                 {
                     Debug::loginfo("simple constant found: " + arg);
+                    if(i == 0) instruction = new Instruction(command);
                     instruction->push(inferConstant(arg));
+                }
+                else if(i == 0 and not attribute.isRoot())
+                {
+                    string& subname = arg;
+
+                    Attributes subAttr = selectAttributes(subname);
+                    Debug::loginfo("search subcommand: " + subname);
+                    if(command->existsSubCommand(subname))
+                    {
+                        tokens.erase(tokens.begin());
+                        Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
+                        return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
+                    }
                 }
                 else
                 {
@@ -197,6 +196,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     
                     if(command)
                     {
+                        if(i == 0) instruction = new Instruction(command);
                         Debug::loginfo("command found: " + command->getViewFullName());
                         instruction->push(buildInstruction(command, argAttr, tokens));
                     }
@@ -213,7 +213,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
         Debug::loginfo("check protoMap for " + to_string(nargsGuard));
         if(actionBundle.existsProtoMap(nargsGuard))
         {
-            instruction->setProtoMap(&actionBundle.getProtoMap(nargsGuard));
+            instruction->setProtoMap(&actionBundle.getProtoMap(nargsGuard), nargsGuard == -1);
             return instruction;
         }
         else

@@ -12,11 +12,11 @@ namespace lizzy
         std::string name;
     protected:
         const Packageable *super;
+        void setSuper(const Packageable *super);
         static void extractNames(const std::string& name, std::string& dstcurrent, std::string& dstsub);
     public:
         Packageable(const std::string &name, const Packageable *super = nullptr);
         virtual ~Packageable();
-        void setSuper(const Packageable *super);
         void setName(const std::string &name);
         const Packageable *getSuper();
         std::string getName() const;

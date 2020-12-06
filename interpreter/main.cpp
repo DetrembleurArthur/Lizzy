@@ -6,7 +6,7 @@
 #include <functional>
 #include "Interpreter.hpp"
 #include "Debug.hpp"
-#include "types/LZPrimitive.hpp"
+#include "LizzyApi.hpp"
 
 using namespace std;
 using namespace lizzy;
@@ -27,17 +27,14 @@ namespace api
 
 int main(int argc, char const *argv[])
 {
-    LZDataType *p = new LZFloat("3.66");
-    cout << p->getId() << endl;
     try
     {
         Interpreter interpreter;
-        interpreter.getRootPackage().createPackage("std.io");
-        interpreter.getRootPackage().createPackage("user.custom");
-        interpreter.getRootPackage().createPackage("user.func");
-        interpreter.getRootPackage().getPackage("std.io")->createCommand("print")
-        .getActionBundle().setAction({typeid(LZString).name(), typeid(LZFloat).name()}, api::print);
 
+
+
+        lizzy::api::connect_api(interpreter.getRootPackage().createPackage("__custom_api__"));
+        
         interpreter.parseFile("main.lz");
 
         interpreter.prefetch();

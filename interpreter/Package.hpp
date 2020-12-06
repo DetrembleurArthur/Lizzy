@@ -12,7 +12,7 @@ namespace lizzy
         std::vector<Packageable *> children;
         Package(const std::string &name, const Packageable *super = nullptr);
     public:
-        static Package *create(const std::string& name="lizzy");
+        static Package *create(const std::string& name="root");
         virtual ~Package();
         Package &createPackage(const std::string &pkgname);
         void remove(const std::string& name);

@@ -66,13 +66,17 @@ LZDataType *Instruction::getResult() const
 			results.push_back(result);
 		}
 	}
-	hash<string> hashGen;
-	size_t hash = hashGen(prototype);
-	if(protoMap->find(hash) == protoMap->end())
-		throwEx("has no prototype like (" + prototype + ")");
-
-	Debug::loginfo("execute instruction: " + prototype);
-	return (*protoMap)[hash](results);
+	if(not undefined)
+	{
+		if(protoMap->find(prototype) == protoMap->end())
+			throwEx("has no prototype like (" + prototype + ")");
+		Debug::loginfo("execute instruction: " + prototype);
+		return (*protoMap)[prototype](results);
+	}
+	else
+	{
+		return (*protoMap)[""](results);
+	}
 }
 
 void Instruction::setSuper(Instruction *super)
@@ -80,7 +84,8 @@ void Instruction::setSuper(Instruction *super)
 	this->super = super;
 }
 
-void Instruction::setProtoMap(ProtoMap *protoMap)
+void Instruction::setProtoMap(ProtoMap *protoMap, bool undefined)
 {
 	this->protoMap = protoMap;
+	this->undefined = undefined;
 }

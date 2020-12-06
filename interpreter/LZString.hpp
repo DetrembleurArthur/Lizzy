@@ -1,7 +1,7 @@
 #ifndef LZ_STRING_HPP
 #define LZ_STRING_HPP
 #include "LZPrimitive.hpp"
-#include "../Parser.hpp"
+#include "Parser.hpp"
 
 
 namespace lizzy

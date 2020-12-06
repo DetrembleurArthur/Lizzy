@@ -1,7 +1,7 @@
 #ifndef LZ_PRIMITIVE_HPP
 #define LZ_PRIMITIVE_HPP
 #include "LZDataType.hpp"
-#include "../Parser.hpp"
+#include "Parser.hpp"
 
 
 namespace lizzy

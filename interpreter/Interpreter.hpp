@@ -3,7 +3,7 @@
 #include "Package.hpp"
 #include "Parser.hpp"
 #include "Instruction.hpp"
-#include "types/DataBuilder.hpp"
+#include "DataBuilder.hpp"
 #include <assert.h>
 
 

@@ -44,7 +44,7 @@ std::string Packageable::getFullName() const
 
 std::string Packageable::getViewFullName() const
 {
-    return getViewFullName();
+    return "undefined";
 }
 
 bool Packageable::operator==(const Packageable& other) const

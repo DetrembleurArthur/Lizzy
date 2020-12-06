@@ -2,8 +2,8 @@
 #define LZ_DATA_TYPE_HPP
 #include <type_traits>
 #include <functional>
-#include "../Debug.hpp"
-#include "../Exceptions.hpp"
+#include "Debug.hpp"
+#include "Exceptions.hpp"
 
 #define ID(type) typeid(type).name()
 

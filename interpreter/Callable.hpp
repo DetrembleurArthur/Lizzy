@@ -1,7 +1,7 @@
 #ifndef CALLABLE_HPP
 #define CALLABLE_HPP
 #include <string>
-#include "types/LZDataType.hpp"
+#include "LZDataType.hpp"
 
 namespace lizzy
 {

@@ -12,6 +12,7 @@ namespace lizzy
     private:
         std::vector<Callable *> arguments;
         ProtoMap *protoMap;
+        bool undefined;
         Command *command;
         Instruction *super;
     public:
@@ -22,7 +23,7 @@ namespace lizzy
         std::string getStackTrace(std::string message="") const;
         void throwEx(std::string message) const noexcept(false);
         void setSuper(Instruction *super);
-        void setProtoMap(ProtoMap *protoMap);
+        void setProtoMap(ProtoMap *protoMap, bool undefined=false);
     };
 }
 
