@@ -33,7 +33,7 @@ std::string LZDataType::toString()
     return "";
 }
 
-int LZDataType::toInt()
+long LZDataType::toInt()
 {
     return 0;
 }

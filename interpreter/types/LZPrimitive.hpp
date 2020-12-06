@@ -1,8 +1,8 @@
 #ifndef LZ_PRIMITIVE_HPP
 #define LZ_PRIMITIVE_HPP
 #include "LZDataType.hpp"
+#include "../Parser.hpp"
 
-#define ID(type) typeid(type).name()
 
 namespace lizzy
 {
@@ -16,7 +16,8 @@ namespace lizzy
         LZPrimitive(const LZPrimitive<T>& value);
         virtual ~LZPrimitive();
         T getValue() const;
-        void setValue(T value);
+        virtual void setValue(T value);
+        virtual void setFromString(const std::string& value);
     };
 }
 

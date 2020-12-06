@@ -40,6 +40,7 @@ namespace lizzy
         static bool isBool(const std::string& expr);
         static bool isString(const std::string& expr);
         static bool isConst(const std::string& expr);
+        static bool isIdentifier(const std::string& expr);
     };
 }
 

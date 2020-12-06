@@ -210,3 +210,8 @@ bool Parser::isConst(const string& expr)
 {
     return isBool(expr) or isString(expr) or isInteger(expr) or isFloat(expr);
 }
+
+bool Parser::isIdentifier(const std::string& expr)
+{
+    return expr.size() >= 2 and expr.front() == '$';
+}

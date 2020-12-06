@@ -27,7 +27,8 @@ namespace api
 
 int main(int argc, char const *argv[])
 {
-
+    LZDataType *p = new LZFloat("3.66");
+    cout << p->getId() << endl;
     try
     {
         Interpreter interpreter;
@@ -35,7 +36,7 @@ int main(int argc, char const *argv[])
         interpreter.getRootPackage().createPackage("user.custom");
         interpreter.getRootPackage().createPackage("user.func");
         interpreter.getRootPackage().getPackage("std.io")->createCommand("print")
-        .getActionBundle().setAction({typeid(LZPrimitive<string>).name(), typeid(LZPrimitive<double>).name()}, api::print);
+        .getActionBundle().setAction({typeid(LZString).name(), typeid(LZFloat).name()}, api::print);
 
         interpreter.parseFile("main.lz");
 

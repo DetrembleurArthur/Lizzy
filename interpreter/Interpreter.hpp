@@ -3,7 +3,7 @@
 #include "Package.hpp"
 #include "Parser.hpp"
 #include "Instruction.hpp"
-#include "types/LZPrimitive.hpp"
+#include "types/DataBuilder.hpp"
 #include <assert.h>
 
 
@@ -30,7 +30,7 @@ namespace lizzy
         Attributes selectAttributes(std::string& expr);
         Instruction *buildInstruction(std::vector<std::string>& tokens);
         Instruction *buildInstruction(Command *command, const Attributes& attr, std::vector<std::string>& tokens);
-        Argument *inferSymbol(const std::string& symbol);
+        Argument *inferConstant(const std::string& symbol);
     public:
         static const int NULL_IPTR;
         Interpreter(const std::string& rootPackageName="lizzy");

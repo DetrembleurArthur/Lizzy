@@ -17,7 +17,7 @@ namespace lizzy
         virtual std::string getId() const final;
         virtual size_t getHashCode() const final;
         virtual std::string toString();
-        virtual int toInt();
+        virtual long toInt();
         virtual double toFloat();
         virtual bool toBool();
         template <class LZ> operator LZ*()

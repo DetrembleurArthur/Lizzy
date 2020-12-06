@@ -35,6 +35,11 @@ template <typename T> void LZPrimitive<T>::setValue(T value)
     this->value = value;
 }
 
+template <typename T> void LZPrimitive<T>::setFromString(const std::string& value)
+{
+
+}
+
 
 template class lizzy::LZPrimitive<long>;
 template class lizzy::LZPrimitive<double>;
