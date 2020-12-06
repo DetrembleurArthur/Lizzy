@@ -161,7 +161,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                 string arg = tokens[0];
                 tokens.erase(tokens.begin());
 
-                if(nargsGuard == -1 and arg == "*")
+                if(arg == "*")
                     break;
                 
 
@@ -171,21 +171,21 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     if(i == 0) instruction = new Instruction(command);
                     instruction->push(inferConstant(arg));
                 }
-                else if(i == 0 and not attribute.isRoot())
+                else 
                 {
-                    string& subname = arg;
-
-                    Attributes subAttr = selectAttributes(subname);
-                    Debug::loginfo("search subcommand: " + subname);
-                    if(command->existsSubCommand(subname))
+                    if(i == 0 and not attribute.isRoot())
                     {
-                        tokens.erase(tokens.begin());
-                        Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
-                        return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
+                        string& subname = arg;
+
+                        Attributes subAttr = selectAttributes(subname);
+                        Debug::loginfo("search subcommand: " + subname);
+                        if(command->existsSubCommand(subname))
+                        {
+                            tokens.erase(tokens.begin());
+                            Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
+                            return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
+                        }
                     }
-                }
-                else
-                {
                     Attributes argAttr = selectAttributes(arg);
 
                     occurences.clear();

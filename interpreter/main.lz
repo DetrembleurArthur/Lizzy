@@ -4,4 +4,4 @@ This is a lizzy code
 :)
 */
 
-print "Hello world!" * print "Hey guy!"
+print 777 "Hello world!"* print 3
