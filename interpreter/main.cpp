@@ -7,6 +7,7 @@
 #include "Interpreter.hpp"
 #include "Debug.hpp"
 #include "LizzyApi.hpp"
+#include "Executer.hpp"
 
 using namespace std;
 using namespace lizzy;
@@ -30,16 +31,16 @@ int main(int argc, char const *argv[])
     try
     {
         Interpreter interpreter;
-
-
+        Executer executer;
 
         lizzy::api::connect_api(interpreter.getRootPackage().createPackage("__custom_api__"));
         
         interpreter.parseFile("main.lz");
 
-        interpreter.prefetch();
+        executer.setInstructions(interpreter.interpret());
 
-        interpreter.execute();
+
+        executer.execute();
         
     }
     catch(const LZException& e)

@@ -5,6 +5,8 @@ using namespace std;
 using namespace lizzy;
 
 
+const std::string LZInteger::type = typeid(LZInteger).name();
+
 
 LZInteger::LZInteger() : LZInteger(0L)
 {

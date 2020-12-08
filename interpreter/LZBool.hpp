@@ -8,6 +8,7 @@ namespace lizzy
     class LZBool : public LZPrimitive<bool>
     {
     public:
+        static const std::string type;
         LZBool();
         LZBool(bool value);
         LZBool(const std::string& value);

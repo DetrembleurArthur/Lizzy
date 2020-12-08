@@ -48,7 +48,6 @@ void Instruction::throwEx(string message) const
 
 LZDataType *Instruction::getResult() const
 {
-	Debug::loginfo("prepare execution...");
 	vector<LZDataType *> results;
 	string prototype = "";
 	
@@ -61,7 +60,6 @@ LZDataType *Instruction::getResult() const
 		for(int i = 1; i < len; i++)
 		{
 			result = arguments[i]->getResult();
-			Debug::loginfo(result->getId());
 			prototype += "&" + result->getId();
 			results.push_back(result);
 		}
@@ -79,7 +77,6 @@ LZDataType *Instruction::getResult() const
 				throwEx("has no prototype like (" + prototype + ")");
 			}
 		}
-		Debug::loginfo("execute instruction: " + prototype);
 		return (*protoMap)[prototype](results);
 	}
 	else

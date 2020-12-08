@@ -8,6 +8,7 @@ namespace lizzy
     class LZInteger : public LZPrimitive<long>
     {
     public:
+        static const std::string type;
         LZInteger();
         LZInteger(long value);
         LZInteger(const std::string& value);

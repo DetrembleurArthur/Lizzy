@@ -8,6 +8,7 @@ namespace lizzy
     class LZFloat : public LZPrimitive<double>
     {
     public:
+        static const std::string type;
         LZFloat();
         LZFloat(double value);
         LZFloat(const std::string& value);

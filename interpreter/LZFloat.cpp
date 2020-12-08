@@ -5,6 +5,8 @@ using namespace std;
 using namespace lizzy;
 
 
+const std::string LZFloat::type = typeid(LZFloat).name();
+
 
 LZFloat::LZFloat() : LZFloat(0.0)
 {

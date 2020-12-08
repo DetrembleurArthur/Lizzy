@@ -9,6 +9,7 @@ namespace lizzy
     class LZString : public LZPrimitive<std::string>
     {
     public:
+        static const std::string type;
         LZString();
         LZString(const std::string& value);
         LZString(const LZString& value);

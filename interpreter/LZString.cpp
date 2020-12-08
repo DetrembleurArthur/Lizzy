@@ -5,6 +5,9 @@ using namespace std;
 using namespace lizzy;
 
 
+const std::string LZString::type = typeid(LZString).name();
+
+
 
 LZString::LZString() : LZString("")
 {

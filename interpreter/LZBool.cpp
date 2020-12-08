@@ -6,6 +6,10 @@ using namespace lizzy;
 
 
 
+const std::string LZBool::type = typeid(LZBool).name();
+
+
+
 LZBool::LZBool() : LZBool(false)
 {
 

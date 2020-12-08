@@ -32,10 +32,10 @@ bool Attributes::isRoot() const
 }
 
 
-const int Interpreter::NULL_IPTR = -1;
+
 
 Interpreter::Interpreter(const std::string& rootPackageName) :
-rootPackage(Package::create(rootPackageName)), iptr(NULL_IPTR)
+rootPackage(Package::create(rootPackageName))
 {
     attributeParser.getSeparators().clear();
     attributeParser.getSeparators().push_back(":");
@@ -43,8 +43,6 @@ rootPackage(Package::create(rootPackageName)), iptr(NULL_IPTR)
 
 Interpreter::~Interpreter()
 {
-    flushLostResults();
-    flushInstructions();
     delete rootPackage;
 }
 
@@ -56,36 +54,6 @@ Package& Interpreter::getRootPackage()
 Parser& Interpreter::getParser()
 {
     return parser;
-}
-
-const std::vector<LZDataType *>& Interpreter::getLostResults() const
-{
-    return lostResults;
-}
-
-void Interpreter::flushLostResults()
-{
-    for(LZDataType *data : lostResults)
-    {
-        if(data)
-            delete data;
-    }
-    lostResults.clear();
-}
-
-const std::vector<Instruction *>& Interpreter::getInstructions() const
-{
-    return instructions;
-}
-
-void Interpreter::flushInstructions()
-{
-    for(Instruction *instr : instructions)
-    {
-        if(instr)
-            delete instr;
-    }
-    instructions.clear();
 }
 
 
@@ -103,27 +71,18 @@ void Interpreter::parse(const std::string& code)
     parser.merge();
 }
 
-void Interpreter::prefetch()
+ std::vector<Instruction *> *Interpreter::interpret()
 {
     Debug::loginfo("run interpreter");
+    vector<Instruction *> *instructions = new vector<Instruction *>();
     vector<string> tokens = parser.getTokens();
     while(tokens.size())
     {
         Debug::loginfo("build new instruction");
-        instructions.push_back(buildInstruction(tokens));
-        Debug::loginfo("instruction builded: " + instructions.back()->getStackTrace());
+        instructions->push_back(buildInstruction(tokens));
+        Debug::loginfo("instruction builded: " + instructions->back()->getStackTrace());
     }
-}
-
-void Interpreter::execute()
-{
-    Debug::loginfo("execution...");
-    for(iptr = 0; iptr < instructions.size(); iptr++)
-    {
-        LZDataType *result = instructions[iptr]->getResult();
-        if(result)
-            lostResults.push_back(result);
-    }
+    return instructions;
 }
 
 Argument *Interpreter::inferConstant(const std::string& symbol)
