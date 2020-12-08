@@ -69,7 +69,16 @@ LZDataType *Instruction::getResult() const
 	if(not undefined)
 	{
 		if(protoMap->find(prototype) == protoMap->end())
-			throwEx("has no prototype like (" + prototype + ")");
+		{
+			if(protoMap->find("") != protoMap->end())
+			{
+				prototype = "";
+			}
+			else
+			{
+				throwEx("has no prototype like (" + prototype + ")");
+			}
+		}
 		Debug::loginfo("execute instruction: " + prototype);
 		return (*protoMap)[prototype](results);
 	}
