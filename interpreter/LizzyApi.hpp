@@ -20,6 +20,8 @@ namespace lizzy
         void connect_api(Package& apiPkg);
         LZDataType *print_1_str_cmd(Arguments args);
         LZDataType *delay_1_flt_cmd(Arguments args);
+        LZDataType *delay_0_flt_cmd(Arguments args);
+        LZDataType *delay_ns_1_flt_cmd(Arguments args);
     }
 }
 

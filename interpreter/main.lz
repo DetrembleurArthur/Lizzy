@@ -4,10 +4,7 @@ This is a lizzy code
 :)
 */
 
-print:1 "Begin program"
+print 1 sleep 123 3
+//print(1, print("Hello world", sleep), 3)
 
 
-print "sleep during:" sleep 1500 "ms" *
-
-
-print:1 "End program"

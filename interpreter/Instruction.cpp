@@ -66,6 +66,7 @@ LZDataType *Instruction::getResult() const
 	}
 	if(not undefined)
 	{
+		cout << "PROTO: " << prototype << endl;
 		if(protoMap->find(prototype) == protoMap->end())
 		{
 			if(protoMap->find("") != protoMap->end())

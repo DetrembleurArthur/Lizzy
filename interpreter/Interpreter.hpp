@@ -23,7 +23,7 @@ namespace lizzy
     private:
         Package *rootPackage;
         Parser parser;
-        Parser attributeParser;
+        Parser attributeParser;;
         Attributes selectAttributes(std::string& expr);
         Instruction *buildInstruction(std::vector<std::string>& tokens);
         Instruction *buildInstruction(Command *command, const Attributes& attr, std::vector<std::string>& tokens);

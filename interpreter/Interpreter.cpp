@@ -106,6 +106,8 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
     Debug::loginfo("build instruction with " + command->getViewFullName());
     ActionBundle& actionBundle = command->getActionBundle();
     int nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMin() : attribute.getNParam();
+    int argsFound = 0;
+
     if(tokens.size() >= nargsGuard || nargsGuard < 0)
     {
         nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMax() : attribute.getNParam();
@@ -115,24 +117,20 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
         {
             vector<Command *> occurences;
             
-            for(int i = 0; i < nargsGuard or (nargsGuard == -1 and not tokens.empty()); i++)
+            for(argsFound = 0; argsFound < nargsGuard or (nargsGuard == -1 and not tokens.empty()); argsFound++)
             {
                 string arg = tokens[0];
                 tokens.erase(tokens.begin());
 
-                if(arg == "*")
-                    break;
-                
-
                 if(Parser::isConst(arg))
                 {
                     Debug::loginfo("simple constant found: " + arg);
-                    if(i == 0) instruction = new Instruction(command);
+                    if(argsFound == 0) instruction = new Instruction(command);
                     instruction->push(inferConstant(arg));
                 }
                 else 
                 {
-                    if(i == 0 and not attribute.isRoot())
+                    if(argsFound == 0 and not attribute.isRoot())
                     {
                         string& subname = arg;
 
@@ -140,7 +138,6 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                         Debug::loginfo("search subcommand: " + subname);
                         if(command->existsSubCommand(subname))
                         {
-                            tokens.erase(tokens.begin());
                             Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
                             return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
                         }
@@ -155,7 +152,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     
                     if(command)
                     {
-                        if(i == 0) instruction = new Instruction(command);
+                        if(argsFound == 0) instruction = new Instruction(command);
                         Debug::loginfo("command found: " + command->getViewFullName());
                         instruction->push(buildInstruction(command, argAttr, tokens));
                     }
@@ -163,6 +160,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     {
                         throw LZException("unknown symbol found: " + arg);
                     }
+                    
                 }
             }
         }
@@ -170,9 +168,9 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
             instruction = new Instruction(command);
 
         Debug::loginfo("check protoMap for " + to_string(nargsGuard));
-        if(actionBundle.existsProtoMap(nargsGuard))
+        if(actionBundle.existsProtoMap(argsFound))
         {
-            instruction->setProtoMap(&actionBundle.getProtoMap(nargsGuard), nargsGuard == -1);
+            instruction->setProtoMap(&actionBundle.getProtoMap(argsFound), nargsGuard == -1);
             return instruction;
         }
         else

@@ -30,7 +30,7 @@ void ActionBundle::setAction(vector<string>&& prototype, Action action)
         }
     }
     bundle[len][proto_str] = action;
-    Debug::loginfo("define action: " + to_string(len) + " : " + proto_str + " : " + proto_str);
+    Debug::loginfo("define action: " + to_string(len) + " : " + proto_str);
 }
 
 ProtoMap& ActionBundle::getProtoMap(int nargs)
@@ -49,15 +49,15 @@ int ActionBundle::getMax() const
 {
     if(existsProtoMap(UNDEFINED_NUMBER_OF_ARGUMENTS))
         return UNDEFINED_NUMBER_OF_ARGUMENTS;
-    return bundle.empty() ? -2 : bundle.cbegin()->first;
+    if(bundle.empty())
+        return -2;
+    auto it = bundle.end();
+    it--;
+    return it->first;
 }
 
 int ActionBundle::getMin() const
 {
-    int mini = -2;
-    for(auto it = bundle.begin(); it != bundle.end(); it++)
-    {
-        mini = it->first;
-    }
+    int mini = bundle.empty() ? -2 : bundle.begin()->first;
     return mini;
 }

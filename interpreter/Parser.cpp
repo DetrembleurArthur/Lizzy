@@ -6,8 +6,8 @@ using namespace std;
 
 Parser::Parser()
 {
-    separators = {"\n", " ", "\t", "/*", "*/", "\\'", "\\\"", "\"", "\\'", "'", "*"};
-    solidSeparators = {{"\"", "\""}, {"'", "'"}, {"\"", "\""}, {"/*", "*/"}};
+    separators = {"\n", " ", "\t", "/*", "*/", "\\'", "\\\"", "\"", "\\'", "'"/*, "()", "(", ")", ","*/};
+    solidSeparators = {{"\"", "\""}, {"'", "'"}, {"/*", "*/"}};
 }
 
 void Parser::parse(const std::string& expr)
