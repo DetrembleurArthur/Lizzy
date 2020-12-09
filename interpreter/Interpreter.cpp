@@ -116,11 +116,47 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
         if(tokens.size() > 0)
         {
             vector<Command *> occurences;
-            
-            for(argsFound = 0; argsFound < nargsGuard or (nargsGuard == -1 and not tokens.empty()); argsFound++)
+            //détecter le mode parenthèsé
+            /*
+            ( => début
+            , => break si non parenthèsé
+            ) => fin
+            ) => fin sans erase() si non parenthèsé
+            */
+           bool parentheseMode = false;
+
+            for(
+            argsFound = 0;
+                argsFound < nargsGuard or
+                (nargsGuard == -1 and not tokens.empty()) or
+                (parentheseMode and not tokens.empty() and tokens[0] != ")");
+            argsFound++)
             {
+                Debug::logwarn(tokens[0]);
                 string arg = tokens[0];
+
+                if(arg == ")" and not parentheseMode)
+                    break;
+
                 tokens.erase(tokens.begin());
+
+                if(arg == "(")
+                {
+                    parentheseMode = true;
+                    argsFound--;
+                    Debug::logfatal(command->getFullName() + " is parenthesed");
+                    continue;
+                }
+                else if(arg == ",")
+                {
+                    if(not parentheseMode) break;
+                    argsFound--;
+                    continue;
+                }
+                else if(arg == ")")
+                {
+                    break;
+                }
 
                 if(Parser::isConst(arg))
                 {
@@ -163,6 +199,8 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     
                 }
             }
+            if(parentheseMode and not tokens.empty() and tokens[0] == ")")
+                tokens.erase(tokens.begin());
         }
         if(not instruction)
             instruction = new Instruction(command);
