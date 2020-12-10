@@ -12,7 +12,7 @@ namespace lizzy
     class DataBuilder
     {
     public:
-        static LZDataType *build(const std::string& expr);
+        static LZDataType *build(const std::string& expr, bool strExplicit=true);
         static LZInteger *buildInteger(const std::string& expr);
         static LZFloat *buildFloat(const std::string& expr);
         static LZBool *buildBool(const std::string& expr);

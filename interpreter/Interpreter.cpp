@@ -101,14 +101,17 @@ Attributes Interpreter::selectAttributes(std::string& expr)
     return Attributes(attributeParser.getTokens());
 }
 
+
+
 Instruction *Interpreter::buildInstruction(Command *command, const Attributes& attribute, vector<string>& tokens)
 {
     Debug::loginfo("build instruction with " + command->getViewFullName());
     ActionBundle& actionBundle = command->getActionBundle();
     int nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMin() : attribute.getNParam();
     int argsFound = 0;
+    auto len = parser.size(tokens);
 
-    if(tokens.size() >= nargsGuard || nargsGuard < 0)
+    if(len >= nargsGuard || nargsGuard < 0)
     {
         nargsGuard = attribute.getNParam() == -2 ? actionBundle.getMax() : attribute.getNParam();
         Debug::loginfo("arguments: " + to_string(nargsGuard));
@@ -116,94 +119,92 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
         if(tokens.size() > 0)
         {
             vector<Command *> occurences;
-            //détecter le mode parenthèsé
-            /*
-            ( => début
-            , => break si non parenthèsé
-            ) => fin
-            ) => fin sans erase() si non parenthèsé
-            */
-           bool parentheseMode = false;
+            
 
-            for(
-            argsFound = 0;
-                argsFound < nargsGuard or
-                (nargsGuard == -1 and not tokens.empty()) or
-                (parentheseMode and not tokens.empty() and tokens[0] != ")");
-            argsFound++)
+            if(tokens[0] != "()")
             {
-                Debug::logwarn(tokens[0]);
-                string arg = tokens[0];
-
-                if(arg == ")" and not parentheseMode)
-                    break;
-
-                tokens.erase(tokens.begin());
-
-                if(arg == "(")
+                bool parentheseMode = false;
+                for(
+                argsFound = 0;
+                    (argsFound == 0 and tokens[0] == "(") or //parenthèsé à 0 argument mais avec une liste éronnée d'arguments
+                    argsFound < nargsGuard or //cas classique
+                    (nargsGuard == -1 and not tokens.empty()) or //cas d'une command à nombre d'arguments indéfini
+                    (parentheseMode and not tokens.empty()); //cas parenthèsé supposé correct
+                argsFound++)
                 {
-                    if(parentheseMode)
-                    {
-                        throw LZException(command->getFullName() + " has too much '('");
-                    }
-                    parentheseMode = true;
-                    argsFound--;
-                    continue;
-                }
-                else if(arg == ",")
-                {
-                    if(not parentheseMode) break;
-                    argsFound--;
-                    continue;
-                }
-                else if(arg == ")")
-                {
-                    break;
-                }
-
-                if(Parser::isConst(arg))
-                {
-                    Debug::loginfo("simple constant found: " + arg);
-                    if(argsFound == 0) instruction = new Instruction(command);
-                    instruction->push(inferConstant(arg));
-                }
-                else 
-                {
-                    if(argsFound == 0 and not attribute.isRoot())
-                    {
-                        string& subname = arg;
-
-                        Attributes subAttr = selectAttributes(subname);
-                        Debug::loginfo("search subcommand: " + subname);
-                        if(command->existsSubCommand(subname))
-                        {
-                            Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
-                            return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
-                        }
-                    }
-                    Attributes argAttr = selectAttributes(arg);
-
-                    occurences.clear();
-
-                    Debug::loginfo("search command for " + arg);
-                    rootPackage->search(arg, occurences);
-                    Command *command = occurences.size() ? occurences.front() : nullptr;
                     
-                    if(command)
+                    string arg = tokens[0];
+                    Debug::logwarn(arg);
+
+                    tokens.erase(tokens.begin());
+
+                    if(arg == "(")
                     {
+                        if(parentheseMode == true)
+                            throw LZException("too much '(' for " + command->getViewFullName());
+                        parentheseMode = true;
+                        argsFound--;
+                        continue;
+                    }
+                    else if(arg == ",")
+                    {
+                        if(not parentheseMode) break;
+                        argsFound--;
+                        continue;
+                    }
+                    else if(arg == ")")
+                    {
+                        parentheseMode = false;
+                        break;
+                    }
+
+                    if(Parser::isConst(arg))
+                    {
+                        Debug::loginfo("simple constant found: " + arg);
                         if(argsFound == 0) instruction = new Instruction(command);
-                        Debug::loginfo("command found: " + command->getViewFullName());
-                        instruction->push(buildInstruction(command, argAttr, tokens));
+                        instruction->push(inferConstant(arg));
                     }
-                    else
+                    else 
                     {
-                        throw LZException("unknown symbol found: " + arg);
+                        if(argsFound == 0 and not attribute.isRoot())
+                        {
+                            string& subname = arg;
+
+                            Attributes subAttr = selectAttributes(subname);
+                            Debug::loginfo("search subcommand: " + subname);
+                            if(command->existsSubCommand(subname))
+                            {
+                                Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
+                                return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
+                            }
+                        }
+                        Attributes argAttr = selectAttributes(arg);
+
+                        occurences.clear();
+
+                        Debug::loginfo("search command for " + arg);
+                        rootPackage->search(arg, occurences);
+                        Command *argCommand = occurences.size() ? occurences.front() : nullptr;
+                        
+                        if(argCommand)
+                        {
+                            if(argsFound == 0) instruction = new Instruction(command);
+                            Debug::loginfo("command found: " + argCommand->getViewFullName());
+                            instruction->push(buildInstruction(argCommand, argAttr, tokens));
+                        }
+                        else
+                        {
+                            throw LZException("unknown symbol found: " + arg);
+                        }
+                        
                     }
-                    
                 }
             }
-            if(parentheseMode and not tokens.empty() and tokens[0] == ")")
+            else
+            {
                 tokens.erase(tokens.begin());
+            }
+            
         }
         if(not instruction)
             instruction = new Instruction(command);
@@ -216,12 +217,12 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
         }
         else
         {
-            throw LZException(to_string(nargsGuard) + " number of arguments is not available for " + command->getViewFullName() + " command");
+            throw LZException(to_string(argsFound) + " number of arguments is not available for " + command->getViewFullName() + " command");
         }
     }
     else
     {
-        throw LZException(command->getViewFullName() + " has " + to_string(nargsGuard) + " min arguments but instruction has " + to_string(tokens.size()));  
+        throw LZException(command->getViewFullName() + " has " + to_string(nargsGuard) + " min arguments but instruction has " + to_string(len));  
     }
 }
 
@@ -231,6 +232,9 @@ Instruction *Interpreter::buildInstruction(vector<string>& tokens)
 
     string cmdName = tokens[0];
     tokens.erase(tokens.begin());
+
+    if(Parser::isConst(cmdName))
+        throw LZException("'" + cmdName + "' constant must be in a command expression");
 
     const Attributes& attr = selectAttributes(cmdName);
 

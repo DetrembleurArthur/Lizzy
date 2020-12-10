@@ -5,10 +5,12 @@ using namespace std;
 using namespace lizzy;
 
 
-LZDataType *DataBuilder::build(const string& expr)
+LZDataType *DataBuilder::build(const string& expr, bool strExplicit)
 {
     if(Parser::isString(expr))
     {
+        if(not strExplicit)
+            return buildString("\"" + expr + "\"");
         return buildString(expr);
     }
     if(Parser::isBool(expr))
@@ -23,6 +25,8 @@ LZDataType *DataBuilder::build(const string& expr)
     {
         return buildFloat(expr);
     }
+    if(not strExplicit)
+        return buildString("\"" + expr + "\"");
     throw LZException("\"" + expr + "\" is not a primitive value");
 }
 

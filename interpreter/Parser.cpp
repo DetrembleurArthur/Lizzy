@@ -6,7 +6,7 @@ using namespace std;
 
 Parser::Parser()
 {
-    separators = {"\n", " ", "\t", "/*", "*/", "\\'", "\\\"", "\"", "\\'", "'", "(", ")", ","};
+    separators = {"\n", " ", "\t", "/*", "*/", "\\'", "\\\"", "\"", "\\'", "'", "()", "(", ")", ","};
     solidSeparators = {{"\"", "\""}, {"'", "'"}, {"/*", "*/"}};
 }
 
@@ -28,6 +28,23 @@ vector<string>& Parser::getTokens()
 std::vector<std::string>& Parser::getSeparators()
 {
     return separators;
+}
+
+size_t Parser::size(const std::vector<std::string>& tokens)
+{
+    auto len = tokens.size();
+    for(const auto& token : tokens)
+    {
+        for(auto sep : separators)
+        {
+            if(token == sep)
+            {
+                len--;
+                break;
+            }
+        }
+    }
+    return len;
 }
 
 string Parser::load_file(const string& filename)

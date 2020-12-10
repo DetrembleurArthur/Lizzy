@@ -15,12 +15,23 @@ void api::connect_api(Package& apiPkg)
     ActionBundle& print_cmd_bdl = std_io_pkg.createCommand("print").getActionBundle();
     print_cmd_bdl.setAction(api::print_1_str_cmd);
 
+    ActionBundle& input_cmd_bdl = std_io_pkg.createCommand("input").getActionBundle();
+    input_cmd_bdl.setAction({}, api::input_0_cmd);
+
     ActionBundle& wait_cmd_bdl = std_th_pkg.createCommand("sleep").getActionBundle();
     wait_cmd_bdl.setAction({LZInteger::type}, api::delay_1_flt_cmd);
     wait_cmd_bdl.setAction({}, api::delay_0_flt_cmd);
 
     ActionBundle& wait_ns_cmd_bdl = std_th_pkg.createCommand("sleep.ns").getActionBundle();
     wait_ns_cmd_bdl.setAction({LZInteger::type}, api::delay_ns_1_flt_cmd);
+}
+
+LZDataType *api::input_0_cmd(Arguments args)
+{
+    cout << "HERE" << endl;
+    string in = "";
+    cin >> in;
+    return DataBuilder::build(in, false);
 }
 
 LZDataType *api::print_1_str_cmd(Arguments args)

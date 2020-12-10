@@ -30,6 +30,7 @@ namespace lizzy
         void merge();
         std::vector<std::string>& getTokens();
         std::vector<std::string>& getSeparators();
+        size_t size(const std::vector<std::string>& tokens);
         static std::string& normalize_ctrl_chars(std::string& content);
         static void replace_str_by_str(std::string& content, const std::string& old_c, const std::string& new_c);
         static std::string load_file(const std::string& filename);

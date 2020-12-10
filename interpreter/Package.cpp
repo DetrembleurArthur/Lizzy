@@ -156,7 +156,7 @@ void Package::searchExceptionThrowing(const std::string& name, std::vector<Comma
     switch(occurences.size())
     {
         case 0:
-            throw LZException("no " + name + " command found through " + getViewFullName() + " package");
+            throw LZException("no '" + name + "' symbol found through " + getViewFullName() + " package");
         case 1:
             break;
         default:
