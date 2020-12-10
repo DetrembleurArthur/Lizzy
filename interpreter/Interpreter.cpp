@@ -142,9 +142,12 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
 
                 if(arg == "(")
                 {
+                    if(parentheseMode)
+                    {
+                        throw LZException(command->getFullName() + " has too much '('");
+                    }
                     parentheseMode = true;
                     argsFound--;
-                    Debug::logfatal(command->getFullName() + " is parenthesed");
                     continue;
                 }
                 else if(arg == ",")

@@ -29,7 +29,7 @@ namespace lizzy
         Instruction *buildInstruction(Command *command, const Attributes& attr, std::vector<std::string>& tokens);
         Argument *inferConstant(const std::string& symbol);
     public:
-        Interpreter(const std::string& rootPackageName="lizzy");
+        Interpreter(const std::string& rootPackageName="root");
         virtual ~Interpreter();
         Package& getRootPackage();
         Parser& getParser();

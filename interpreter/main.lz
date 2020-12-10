@@ -7,10 +7,4 @@ This is a lizzy code
 //print 1 sleep 123 3
 
 
-print(
-    1
-    2
-    sleep()
-    3
-)
-
+print("Hello world!", sleep.ns(1))
