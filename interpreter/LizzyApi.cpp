@@ -41,7 +41,7 @@ LZDataType *api::print_1_str_cmd(Arguments args)
         cout << arg->toString() << " ";
     }
     cout << endl;
-    return new LZInteger(args.size());
+    return DataBuilder::rbuildInteger(args.size());
 }
 
 LZDataType *api::delay_1_flt_cmd(Arguments args)

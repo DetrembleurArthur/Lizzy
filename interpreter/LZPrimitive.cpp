@@ -40,6 +40,11 @@ template <typename T> void LZPrimitive<T>::setFromString(const std::string& valu
 
 }
 
+template <typename T> bool LZPrimitive<T>::equals(T value)
+{
+    return value == this->value;
+}  
+
 
 template class lizzy::LZPrimitive<long>;
 template class lizzy::LZPrimitive<double>;

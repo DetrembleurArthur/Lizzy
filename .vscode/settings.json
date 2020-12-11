@@ -48,6 +48,11 @@
         "compare": "cpp",
         "complex": "cpp",
         "concepts": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     }
 }

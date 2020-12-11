@@ -6,14 +6,14 @@ using namespace lizzy;
 
 LZDataType::LZDataType()
 {
-
+    Debug::logfatal("CREATE DATA");
 }
 
 
 
 LZDataType::~LZDataType()
 {
-    
+    Debug::logfatal("REMOVE DATA");
 }
 
 string LZDataType::getId() const

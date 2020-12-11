@@ -18,6 +18,7 @@ namespace lizzy
         T getValue() const;
         virtual void setValue(T value);
         virtual void setFromString(const std::string& value);
+        bool equals(T value);
     };
 }
 

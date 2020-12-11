@@ -41,6 +41,8 @@ int main(int argc, char const *argv[])
 
 
         executer.execute();
+
+        DataBuilder::clearConstants();
         
     }
     catch(const LZException& e)
