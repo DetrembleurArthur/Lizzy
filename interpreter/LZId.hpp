@@ -1,24 +1,24 @@
-#ifndef LZ_BOOL_HPP
-#define LZ_BOOL_HPP
+#ifndef LZ_ID_HPP
+#define LZ_ID_HPP
 #include "LZPrimitive.hpp"
+#include "Parser.hpp"
 
 
 namespace lizzy
 {
-    class LZBool : public LZPrimitive<bool>
+    class LZId : public LZPrimitive<std::string>
     {
     public:
         static const std::string type;
-        LZBool();
-        LZBool(bool value);
-        LZBool(const std::string& value);
-        LZBool(const LZBool& value);
-        virtual ~LZBool();
+        LZId();
+        LZId(const std::string& value);
+        virtual ~LZId();
         virtual std::string getId() const override;
         std::string toString() override;
         long toInt() override;
         double toFloat() override;
         bool toBool() override;
+        void setValue(std::string value) override;
         void setFromString(const std::string& value) override;
     };
 }

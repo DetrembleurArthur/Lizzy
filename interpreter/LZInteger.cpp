@@ -5,7 +5,7 @@ using namespace std;
 using namespace lizzy;
 
 
-const std::string LZInteger::type = typeid(LZInteger).name();
+const std::string LZInteger::type = "LZInteger";
 
 
 LZInteger::LZInteger() : LZInteger(0L)
@@ -31,6 +31,11 @@ LZInteger::LZInteger(const LZInteger& value) : LZInteger(value.getValue())
 LZInteger::~LZInteger()
 {
 
+}
+
+std::string LZInteger::getId() const
+{
+    return LZInteger::type;
 }
 
 string LZInteger::toString()

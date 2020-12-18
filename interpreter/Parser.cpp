@@ -230,5 +230,12 @@ bool Parser::isConst(const string& expr)
 
 bool Parser::isIdentifier(const std::string& expr)
 {
-    return expr.size() >= 2 and expr.front() == '$';
+    char ids[] = {'$'};
+    if(expr.size() >= 2)
+    {
+        for(int i = 0; i < 1; i++)
+            if(expr.front() == ids[i])
+                return true;
+    }
+    return false;
 }

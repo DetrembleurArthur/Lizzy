@@ -14,6 +14,7 @@ namespace lizzy
         LZInteger(const std::string& value);
         LZInteger(const LZInteger& value);
         virtual ~LZInteger();
+        virtual std::string getId() const override;
         std::string toString() override;
         long toInt() override;
         double toFloat() override;

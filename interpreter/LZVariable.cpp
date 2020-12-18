@@ -11,8 +11,10 @@ LZVariable::LZVariable(const std::string& name) : LZVariable(name, nullptr)
 
 LZVariable::LZVariable(const std::string& name, LZDataType *other) : reference(other)
 {
-    if(not name.empty())
-        this->name = name;
+    if(name.size() > 1)
+    {
+        this->name = name.substr(1);
+    }
     else
         throw LZException("variable name is empty");
 }
@@ -22,11 +24,16 @@ LZVariable::~LZVariable()
 
 }
 
+std::string LZVariable::getId() const
+{
+    return "LZVariable";
+}
+
 std::string LZVariable::toString()
 {
     if(reference)
         return reference->toString();
-    throw LZException("reference to 'null'");
+    return "(null)";
 }
 
 long LZVariable::toInt()

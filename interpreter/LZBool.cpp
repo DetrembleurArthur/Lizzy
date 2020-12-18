@@ -6,7 +6,7 @@ using namespace lizzy;
 
 
 
-const std::string LZBool::type = typeid(LZBool).name();
+const std::string LZBool::type = "LZBool";
 
 
 
@@ -33,6 +33,11 @@ LZBool::LZBool(const string& value)
 LZBool::~LZBool()
 {
 
+}
+
+std::string LZBool::getId() const
+{
+    return LZBool::type;
 }
 
 string LZBool::toString()

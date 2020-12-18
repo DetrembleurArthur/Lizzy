@@ -18,7 +18,7 @@ LZDataType::~LZDataType()
 
 string LZDataType::getId() const
 {
-    return typeid(*this).name();
+    return "LZDataType";
 }
 
 size_t LZDataType::getHashCode() const

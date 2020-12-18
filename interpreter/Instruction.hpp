@@ -4,6 +4,7 @@
 #include "ActionBundle.hpp"
 #include "Command.hpp"
 #include "Argument.hpp"
+#include "DataStack.hpp"
 
 namespace lizzy
 {
@@ -15,6 +16,8 @@ namespace lizzy
         bool undefined;
         Command *command;
         Instruction *super;
+        DataStack **dataStack;
+        void setPDataStack(DataStack **pdataStack);
     public:
         Instruction(Command *command);
         virtual ~Instruction();
@@ -24,6 +27,7 @@ namespace lizzy
         void throwEx(std::string message) const noexcept(false);
         void setSuper(Instruction *super);
         void setProtoMap(ProtoMap *protoMap, bool undefined=false);
+        void setDataStack(DataStack *dataStack);
     };
 }
 

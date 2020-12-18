@@ -1,6 +1,6 @@
-OBJS	= ActionBundle.o Argument.o Callable.o Command.o Debug.o Exceptions.o Instruction.o Interpreter.o Package.o Packageable.o Parser.o DataBuilder.o LZBool.o LZDataType.o LZFloat.o LZInteger.o LZPrimitive.o LZString.o LizzyApi.o Executer.o LZVariable.o DataStack.o main.o
-SOURCE	= ActionBundle.cpp Argument.cpp Callable.cpp Command.cpp Debug.cpp Exceptions.cpp Instruction.cpp Interpreter.cpp Package.cpp Packageable.cpp Parser.cpp DataBuilder.cpp LZBool.cpp LZDataType.cpp LZFloat.cpp LZInteger.cpp LZPrimitive.cpp LZString.cpp LizzyApi.cpp Executer.cpp LZVariable.cpp DataStack.cpp main.cpp
-HEADER	= ActionBundle.hpp Argument.hpp Callable.hpp Command.hpp Debug.hpp Exceptions.hpp Instruction.hpp Interpreter.hpp Package.hpp Packageable.hpp Parser.hpp DataBuilder.hpp LZBool.hpp LZDataType.hpp LZFloat.hpp LZInteger.hpp LZPrimitive.hpp LZString.hpp Executer.hpp LZVariable.hpp DataStack.hpp LizzyApi.hpp
+OBJS	= ActionBundle.o Argument.o Callable.o Command.o Debug.o Exceptions.o Instruction.o Interpreter.o Package.o Packageable.o Parser.o DataBuilder.o LZBool.o LZDataType.o LZFloat.o LZInteger.o LZPrimitive.o LZString.o LizzyApi.o Executer.o LZVariable.o DataStack.o LZId.o main.o
+SOURCE	= ActionBundle.cpp Argument.cpp Callable.cpp Command.cpp Debug.cpp Exceptions.cpp Instruction.cpp Interpreter.cpp Package.cpp Packageable.cpp Parser.cpp DataBuilder.cpp LZBool.cpp LZDataType.cpp LZFloat.cpp LZInteger.cpp LZPrimitive.cpp LZString.cpp LizzyApi.cpp Executer.cpp LZVariable.cpp DataStack.cpp LZId.cpp main.cpp
+HEADER	= ActionBundle.hpp Argument.hpp Callable.hpp Command.hpp Debug.hpp Exceptions.hpp Instruction.hpp Interpreter.hpp Package.hpp Packageable.hpp Parser.hpp DataBuilder.hpp LZBool.hpp LZDataType.hpp LZFloat.hpp LZInteger.hpp LZPrimitive.hpp LZString.hpp Executer.hpp LZVariable.hpp DataStack.hpp LZId.hpp LizzyApi.hpp
 OUT	= lizzy
 CC	 = g++
 FLAGS	 = -g -c -Wall -std=c++2a
@@ -76,6 +76,9 @@ LZVariable.o: LZVariable.cpp
 
 DataStack.o: DataStack.cpp
 	$(CC) $(FLAGS) DataStack.cpp
+
+LZId.o: LZId.cpp
+	$(CC) $(FLAGS) LZId.cpp
 
 main.o: main.cpp
 	$(CC) $(FLAGS) main.cpp 

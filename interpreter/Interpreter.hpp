@@ -28,6 +28,7 @@ namespace lizzy
         Instruction *buildInstruction(std::vector<std::string>& tokens);
         Instruction *buildInstruction(Command *command, const Attributes& attr, std::vector<std::string>& tokens);
         Argument *inferConstant(const std::string& symbol);
+        Argument *inferIdentifier(const std::string& symbol);
     public:
         Interpreter(const std::string& rootPackageName="root");
         virtual ~Interpreter();

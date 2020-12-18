@@ -11,6 +11,7 @@ namespace lizzy
     public:
         Argument();
         Argument(LZDataType* result);
+        virtual ~Argument();
         void setResult(LZDataType* result);
         LZDataType *getResult() const override;
     };

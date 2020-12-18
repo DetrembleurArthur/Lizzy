@@ -3,6 +3,7 @@
 #include <vector>
 #include <stack>
 #include "LZVariable.hpp"
+#include "Parser.hpp"
 
 
 namespace lizzy
@@ -17,9 +18,11 @@ namespace lizzy
         virtual ~DataStack();
         static DataStack *create();
         int push(LZVariable *var);
+        void push();
         void pop();
         size_t variables() const;
         size_t contexts() const;
+        LZVariable *getVariable(const std::string& id);
     };
 }
 

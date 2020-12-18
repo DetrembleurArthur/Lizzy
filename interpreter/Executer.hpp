@@ -1,6 +1,7 @@
 #ifndef EXECUTER_HPP
 #define EXECUTER_HPP
 #include "Instruction.hpp"
+#include "DataStack.hpp"
 
 
 namespace lizzy
@@ -10,6 +11,7 @@ namespace lizzy
     private:
         std::vector<Instruction *> *instructions;
         std::vector<LZDataType *> lostResults;
+        DataStack *dataStack = nullptr;
         int iptr;
     public:
         Executer();

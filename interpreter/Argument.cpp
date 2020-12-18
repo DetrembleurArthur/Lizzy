@@ -13,6 +13,11 @@ Argument::Argument(LZDataType* result) : result(result)
     
 }
 
+Argument::~Argument()
+{
+    if(this->result)
+        delete this->result;
+}
 
 void Argument::setResult(LZDataType *result)
 {

@@ -14,7 +14,7 @@ namespace lizzy
     public:
         LZDataType();
         virtual ~LZDataType();
-        virtual std::string getId() const final;
+        virtual std::string getId() const;
         virtual size_t getHashCode() const final;
         virtual std::string toString();
         virtual long toInt();

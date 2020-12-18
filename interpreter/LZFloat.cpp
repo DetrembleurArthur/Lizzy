@@ -5,7 +5,7 @@ using namespace std;
 using namespace lizzy;
 
 
-const std::string LZFloat::type = typeid(LZFloat).name();
+const std::string LZFloat::type = "LZFloat";
 
 
 LZFloat::LZFloat() : LZFloat(0.0)
@@ -31,6 +31,11 @@ LZFloat::LZFloat(const LZFloat& value) : LZFloat(value.getValue())
 LZFloat::~LZFloat()
 {
 
+}
+
+string LZFloat::getId() const
+{
+    return LZFloat::type;
 }
 
 string LZFloat::toString()

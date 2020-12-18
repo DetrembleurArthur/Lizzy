@@ -91,6 +91,12 @@ Argument *Interpreter::inferConstant(const std::string& symbol)
     return new Argument(DataBuilder::build(symbol));
 }
 
+Argument *Interpreter::inferIdentifier(const std::string& symbol)
+{
+    Debug::loginfo("infer constant " + symbol);
+    return new Argument(DataBuilder::buildId(symbol));
+}
+
 Attributes Interpreter::selectAttributes(std::string& expr)
 {
     attributeParser.parse(expr);
@@ -164,7 +170,13 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                         if(argsFound == 0) instruction = new Instruction(command);
                         instruction->push(inferConstant(arg));
                     }
-                    else 
+                    else if(Parser::isIdentifier(arg))
+                    {
+                        Debug::loginfo("simple id found: " + arg);
+                        if(argsFound == 0) instruction = new Instruction(command);
+                        instruction->push(inferIdentifier(arg));
+                    }
+                    else
                     {
                         if(argsFound == 0 and not attribute.isRoot())
                         {

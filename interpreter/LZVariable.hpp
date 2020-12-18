@@ -14,6 +14,7 @@ namespace lizzy
         LZVariable(const std::string& name);
         LZVariable(const std::string& name, LZDataType *other);
         virtual ~LZVariable();
+        virtual std::string getId() const override;
         LZDataType *getValue();
         void setValue(LZDataType *reference);
         bool isNull() const;

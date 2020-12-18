@@ -5,7 +5,7 @@ using namespace std;
 using namespace lizzy;
 
 
-const std::string LZString::type = typeid(LZString).name();
+const std::string LZString::type = "LZString";
 
 
 
@@ -27,6 +27,11 @@ LZString::LZString(const LZString& value) : LZString(value.getValue())
 LZString::~LZString()
 {
 
+}
+
+std::string LZString::getId() const
+{
+    return LZString::type;
 }
 
 string LZString::toString()
