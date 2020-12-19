@@ -6,7 +6,7 @@ using namespace lizzy;
 
 
 
-Instruction::Instruction(Command *command) : protoMap(nullptr), command(command), super(nullptr), dataStack(nullptr)
+Instruction::Instruction(Command *command) : protoMap(nullptr), command(command), super(nullptr), env(nullptr)
 {
 	Debug::loginfo("create instruction: " + command->getViewFullName());
 }
@@ -17,9 +17,14 @@ Instruction::~Instruction()
 	{
 		delete c;
 	}
-	if(not super and dataStack)
-		delete dataStack;
+	if(not super and env)
+		delete env;
 	Debug::loginfo("destroy instruction: " + getStackTrace());
+}
+
+Command *Instruction::getCommand()
+{
+	return command;
 }
 
 
@@ -29,7 +34,7 @@ Instruction& Instruction::push(Callable* arg)
 	if(dynamic_cast<Instruction *>(arg))
 	{
 		dynamic_cast<Instruction *>(arg)->setSuper(this);
-		dynamic_cast<Instruction *>(arg)->setPDataStack(dataStack);
+		dynamic_cast<Instruction *>(arg)->setPEnv(env);
 		Debug::loginfo("push instruction:\n" + dynamic_cast<Instruction *>(arg)->getStackTrace());
 	}
 	Debug::loginfo("push argument");
@@ -53,14 +58,13 @@ LZDataType *Instruction::getResult() const
 {
 	vector<LZDataType *> results;
 	string prototype = "";
-	cout << "exec" << endl;
 	if(not arguments.empty())
 	{
 		auto len = arguments.size();
 		LZDataType *result = arguments[0]->getResult();
 		if(dynamic_cast<LZId *>(result))
 		{
-			LZVariable *temp = (*dataStack)->getVariable(result->toString());
+			LZVariable *temp = (*env)->getDataStack()->getVariable(result->toString());
 			if(temp)
 			{
 				result = temp;
@@ -73,7 +77,7 @@ LZDataType *Instruction::getResult() const
 			result = arguments[i]->getResult();
 			if(dynamic_cast<LZId *>(result))
 			{
-				LZVariable *temp = (*dataStack)->getVariable(result->toString());
+				LZVariable *temp = (*env)->getDataStack()->getVariable(result->toString());
 				if(temp)
 				{
 					result = temp;
@@ -97,11 +101,11 @@ LZDataType *Instruction::getResult() const
 				throwEx("has no prototype like (" + prototype + ")");
 			}
 		}
-		return (*protoMap)[prototype](results);
+		return (*protoMap)[prototype](results, *env);
 	}
 	else
 	{
-		return (*protoMap)[""](results);
+		return (*protoMap)[""](results, *env);
 	}
 }
 
@@ -116,14 +120,14 @@ void Instruction::setProtoMap(ProtoMap *protoMap, bool undefined)
 	this->undefined = undefined;
 }
 
-void Instruction::setDataStack(DataStack *dataStack)
+void Instruction::setEnv(ExecutionEnv *env)
 {
-	if(not this->dataStack)
-		this->dataStack = new DataStack*;
-	*this->dataStack = dataStack;
+	if(not this->env)
+		this->env = new ExecutionEnv*;
+	*this->env = env;
 }
 
-void Instruction::setPDataStack(DataStack **pdataStack)
+void Instruction::setPEnv(ExecutionEnv **env)
 {
-	this->dataStack = pdataStack;
+	this->env = env;
 }

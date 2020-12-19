@@ -4,6 +4,7 @@
 #include "Parser.hpp"
 #include "Instruction.hpp"
 #include "DataBuilder.hpp"
+#include "Executer.hpp"
 #include <assert.h>
 
 
@@ -23,7 +24,7 @@ namespace lizzy
     private:
         Package *rootPackage;
         Parser parser;
-        Parser attributeParser;;
+        Parser attributeParser;
         Attributes selectAttributes(std::string& expr);
         Instruction *buildInstruction(std::vector<std::string>& tokens);
         Instruction *buildInstruction(Command *command, const Attributes& attr, std::vector<std::string>& tokens);
@@ -36,7 +37,7 @@ namespace lizzy
         Parser& getParser();
         void parseFile(const std::string& filename);
         void parse(const std::string& code);
-        std::vector<Instruction *> *interpret();
+        Executer *interpret();
     };
 }
 

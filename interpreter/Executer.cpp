@@ -5,39 +5,34 @@ using namespace std;
 using namespace lizzy;
 
 
-Executer::Executer() : instructions(nullptr), dataStack(DataStack::create()), iptr(-1)
+Executer::Executer()
 {
 
 }
 
 Executer::~Executer()
 {
-    if(instructions)
-    {
-        for(auto *instr : *instructions)
-        {
-            delete instr;
-        }
-        delete instructions;
-    }
+    if(env)
+        delete env;
     for(auto *result : lostResults)
     {
         delete result;
     }
-    delete dataStack;
 }
 
-void Executer::setInstructions(std::vector<Instruction *> *instructions)
+void Executer::setEnv(ExecutionEnv *env)
 {
-    this->instructions = instructions;
+    this->env = env;
 }
 
 void Executer::execute()
 {
     Debug::loginfo("execution...");
+    int& iptr = env->getIPtr();
+    auto *instructions = env->getInstructions();
     for(iptr = 0; iptr < instructions->size(); iptr++)
     {
-        (*instructions)[iptr]->setDataStack(dataStack);
+        (*instructions)[iptr]->setEnv(env);
         LZDataType *result = (*instructions)[iptr]->getResult();
         if(result)
             lostResults.push_back(result);

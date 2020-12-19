@@ -71,18 +71,30 @@ void Interpreter::parse(const std::string& code)
     parser.merge();
 }
 
- std::vector<Instruction *> *Interpreter::interpret()
+ Executer *Interpreter::interpret()
 {
     Debug::loginfo("run interpreter");
     vector<Instruction *> *instructions = new vector<Instruction *>();
+    BranchController *branchController = new BranchController();
     vector<string> tokens = parser.getTokens();
     while(tokens.size())
     {
         Debug::loginfo("build new instruction");
-        instructions->push_back(buildInstruction(tokens));
+        Instruction *instruction = buildInstruction(tokens);
+        branchController->build(instructions->size(), instruction->getCommand()->getName());
+        instructions->push_back(instruction);
         Debug::loginfo("instruction builded: " + instructions->back()->getStackTrace());
     }
-    return instructions;
+    Executer *executer = new Executer();
+    branchController->finalize();
+    branchController->show();
+
+    ExecutionEnv *env = new ExecutionEnv();
+    env->setBranchController(branchController);
+    env->setInstructions(instructions);
+    env->setDataStack(DataStack::create());
+    executer->setEnv(env);
+    return executer;
 }
 
 Argument *Interpreter::inferConstant(const std::string& symbol)
@@ -200,9 +212,16 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                         
                         if(argCommand)
                         {
-                            if(argsFound == 0) instruction = new Instruction(command);
-                            Debug::loginfo("command found: " + argCommand->getViewFullName());
-                            instruction->push(buildInstruction(argCommand, argAttr, tokens));
+                            if(argCommand->isInner())
+                            {
+                                if(argsFound == 0) instruction = new Instruction(command);
+                                Debug::loginfo("command found: " + argCommand->getViewFullName());
+                                instruction->push(buildInstruction(argCommand, argAttr, tokens));
+                            }
+                            else
+                            {
+                                throw LZException(argCommand->getViewFullName() + " command is not an inner command");
+                            }
                         }
                         else
                         {

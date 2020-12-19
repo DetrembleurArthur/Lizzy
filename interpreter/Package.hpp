@@ -23,7 +23,7 @@ namespace lizzy
         void removePackage(const std::string& name);
         bool existsPackage(const std::string& name);
         Package *getPackage(const std::string& name);
-        Command &createCommand(const std::string &name);
+        Command &createCommand(const std::string &name, bool inner = true);
         void removeCommand(const std::string& name);
         bool existsCommand(const std::string& name);
         Command *getCommand(const std::string& name);

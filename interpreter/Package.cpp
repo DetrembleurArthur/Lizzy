@@ -169,7 +169,7 @@ void Package::searchExceptionThrowing(const std::string& name, std::vector<Comma
     }
 }
 
-Command& Package::createCommand(const std::string &name)
+Command& Package::createCommand(const std::string &name, bool inner)
 {
     string cmdname;
     string subname;
@@ -183,7 +183,7 @@ Command& Package::createCommand(const std::string &name)
             {
                 if(subname.size())
                 {
-                    return dynamic_cast<Command *>(children[i])->createSubCommand(subname);
+                    return dynamic_cast<Command *>(children[i])->createSubCommand(subname, inner);
                 }
                 else
                 {
@@ -192,10 +192,10 @@ Command& Package::createCommand(const std::string &name)
             }
         }
     }
-    Command *command = new Command(cmdname, this);
+    Command *command = new Command(cmdname, this, inner);
     children.push_back(command);
     if(subname.size())
-        return command->createSubCommand(subname);
+        return command->createSubCommand(subname, inner);
     return *command;
 }
 

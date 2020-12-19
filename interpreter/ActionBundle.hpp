@@ -4,11 +4,12 @@
 #include <map>
 #include <iostream>
 #include "DataBuilder.hpp"
+#include "ExecutionEnv.hpp"
 
 namespace lizzy
 {
 	typedef const std::vector<LZDataType *>& Arguments;
-	typedef LZDataType *(*Action)(Arguments);
+	typedef LZDataType *(*Action)(Arguments, ExecutionEnv *);
     typedef std::map<std::string, Action> ProtoMap;
 
     class ActionBundle

@@ -5,7 +5,7 @@ using namespace std;
 using namespace lizzy;
 
 
-Command::Command(const std::string &name, const Packageable *super) : Packageable(name, super), actionBundle(nullptr)
+Command::Command(const std::string &name, const Packageable *super, bool inner) : Packageable(name, super), actionBundle(nullptr), inner(inner)
 {
     Debug::loginfo("create command: " + getViewFullName());
 }
@@ -23,6 +23,11 @@ Command::~Command()
     Debug::loginfo("destroy command: " + getViewFullName());
 }
 
+bool Command::isInner() const
+{
+    return inner;
+}
+
 ActionBundle& Command::getActionBundle()
 {
     if(actionBundle == nullptr)
@@ -32,7 +37,7 @@ ActionBundle& Command::getActionBundle()
     return *actionBundle;
 }
 
-Command& Command::createSubCommand(const std::string& name)
+Command& Command::createSubCommand(const std::string& name, bool inner)
 {
     string cmdname;
     string subname;
@@ -43,7 +48,7 @@ Command& Command::createSubCommand(const std::string& name)
         {
             if(subname.size())
             {
-                return cmd->createSubCommand(subname);
+                return cmd->createSubCommand(subname, inner);
             }
             else
             {
@@ -51,11 +56,11 @@ Command& Command::createSubCommand(const std::string& name)
             }
         }
     }
-    Command *cmd = new Command(cmdname, this);
+    Command *cmd = new Command(cmdname, this, inner);
     subcommands.push_back(cmd);
     if(subname.size())
     {
-        return cmd->createSubCommand(subname);
+        return cmd->createSubCommand(subname, inner);
     }
     return *cmd;
 }

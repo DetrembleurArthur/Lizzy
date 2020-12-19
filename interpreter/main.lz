@@ -5,4 +5,12 @@ This is a lizzy code
 */
 
 
-print("Hello world", $var)
+if true
+    nop
+    nop
+    if true
+        nop
+    endif
+    nop
+
+endif

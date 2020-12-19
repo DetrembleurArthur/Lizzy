@@ -13,34 +13,22 @@ using namespace std;
 using namespace lizzy;
 
 
-
-namespace api
-{
-    LZDataType *print(Arguments args)
-    {
-        LZPrimitive<string> *msg = *args[0];
-        LZPrimitive<double> *l = *args[1];
-        cout << msg->getValue() << " " << l->getValue() << endl;
-        return (LZDataType *)nullptr;
-    }
-}
-
-
 int main(int argc, char const *argv[])
 {
     try
     {
         Interpreter interpreter;
-        Executer executer;
+        Executer *executer;
 
         lizzy::api::connect_api(interpreter.getRootPackage().createPackage("__custom_api__"));
         
         interpreter.parseFile("main.lz");
 
-        executer.setInstructions(interpreter.interpret());
+        executer = interpreter.interpret();
 
+        executer->execute();
 
-        executer.execute();
+        delete executer;
         
     }
     catch(const LZException& e)

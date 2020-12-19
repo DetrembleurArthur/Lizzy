@@ -1,8 +1,6 @@
 #ifndef LIZZY_API_HPP
 #define LIZZY_API_HPP
-#include "Package.hpp"
-#include <thread>
-#include <chrono>
+#include "LizzyLangApi.hpp"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -16,13 +14,8 @@ namespace lizzy
 {
     namespace api
     {
-        typedef void (*Api)(Package&);
         void connect_api(Package& apiPkg);
-        LZDataType *print_1_str_cmd(Arguments args);
-        LZDataType *delay_1_flt_cmd(Arguments args);
-        LZDataType *delay_0_flt_cmd(Arguments args);
-        LZDataType *delay_ns_1_flt_cmd(Arguments args);
-        LZDataType *input_0_cmd(Arguments args);
+        LZDataType *nop(Arguments args, ExecutionEnv *env);
     }
 }
 

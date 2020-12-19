@@ -26,7 +26,7 @@ LZVariable::~LZVariable()
 
 std::string LZVariable::getId() const
 {
-    return "LZVariable";
+    return reference ? reference->getId() : "LZVariable";
 }
 
 std::string LZVariable::toString()
