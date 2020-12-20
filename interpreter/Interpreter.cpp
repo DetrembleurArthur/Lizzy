@@ -81,7 +81,7 @@ void Interpreter::parse(const std::string& code)
     {
         Debug::loginfo("build new instruction");
         Instruction *instruction = buildInstruction(tokens);
-        branchController->build(instructions->size(), instruction->getCommand()->getName());
+        branchController->build(instructions->size(), instruction->getCommand()->getFullName());
         instructions->push_back(instruction);
         Debug::loginfo("instruction builded: " + instructions->back()->getStackTrace());
     }
@@ -137,10 +137,21 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
         if(tokens.size() > 0)
         {
             vector<Command *> occurences;
-            
-
             if(tokens[0] != "()")
             {
+                if(argsFound == 0 and not attribute.isRoot())
+                {
+                    string subname = tokens[0];
+
+                    Attributes subAttr = selectAttributes(subname);
+                    Debug::loginfo("search subcommand: " + subname);
+                    if(command->existsSubCommand(subname))
+                    {
+                        tokens.erase(tokens.begin());
+                        Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
+                        return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
+                    }
+                }
                 bool parentheseMode = false;
                 for(
                 argsFound = 0;
@@ -150,7 +161,6 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     (parentheseMode and not tokens.empty()); //cas parenthèsé supposé correct
                 argsFound++)
                 {
-                    
                     string arg = tokens[0];
                     Debug::logwarn(arg);
 
@@ -190,18 +200,7 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                     }
                     else
                     {
-                        if(argsFound == 0 and not attribute.isRoot())
-                        {
-                            string& subname = arg;
-
-                            Attributes subAttr = selectAttributes(subname);
-                            Debug::loginfo("search subcommand: " + subname);
-                            if(command->existsSubCommand(subname))
-                            {
-                                Debug::loginfo("subcommand of " + command->getViewFullName() + " detected " + subname);
-                                return buildInstruction(command->getSubCommand(subname), subAttr, tokens);
-                            }
-                        }
+                        
                         Attributes argAttr = selectAttributes(arg);
 
                         occurences.clear();
@@ -212,22 +211,14 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
                         
                         if(argCommand)
                         {
-                            if(argCommand->isInner())
-                            {
-                                if(argsFound == 0) instruction = new Instruction(command);
-                                Debug::loginfo("command found: " + argCommand->getViewFullName());
-                                instruction->push(buildInstruction(argCommand, argAttr, tokens));
-                            }
-                            else
-                            {
-                                throw LZException(argCommand->getViewFullName() + " command is not an inner command");
-                            }
+                            if(argsFound == 0) instruction = new Instruction(command);
+                            Debug::loginfo("command found: " + argCommand->getViewFullName());
+                            instruction->push(buildInstruction(argCommand, argAttr, tokens));
                         }
                         else
                         {
                             throw LZException("unknown symbol found: " + arg);
                         }
-                        
                     }
                 }
             }
@@ -241,9 +232,9 @@ Instruction *Interpreter::buildInstruction(Command *command, const Attributes& a
             instruction = new Instruction(command);
 
         Debug::loginfo("check protoMap for " + to_string(nargsGuard));
-        if(actionBundle.existsProtoMap(argsFound))
+        if(actionBundle.existsPrototype(argsFound))
         {
-            instruction->setProtoMap(&actionBundle.getProtoMap(argsFound), nargsGuard == -1);
+            instruction->setPrototype(&actionBundle.getPrototype(argsFound), nargsGuard == -1);
             return instruction;
         }
         else

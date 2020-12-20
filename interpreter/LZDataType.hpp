@@ -12,6 +12,7 @@ namespace lizzy
     class LZDataType
     {
     public:
+        static const std::string type;
         LZDataType();
         virtual ~LZDataType();
         virtual std::string getId() const;
@@ -24,6 +25,12 @@ namespace lizzy
         {
             return dynamic_cast<LZ *>(this);
         }
+        static int isDataType(LZDataType *other);
+        static int isInteger(LZDataType *other);
+        static int isFloat(LZDataType *other);
+        static int isBool(LZDataType *other);
+        static int isString(LZDataType *other);
+        static int isId(LZDataType *other);
     };
 }
 

@@ -9,7 +9,7 @@ namespace lizzy
 {
     enum BranchType
     {
-        NONE,IF,ELSE,ELIF,ENDIF
+        NONE,IF,ELSE,ELIF,ENDIF,WHILE,ENDWHILE
     };
 
     struct Branch
@@ -24,6 +24,7 @@ namespace lizzy
     private:
         std::map<int, Branch*> branchMap;
         std::stack<Branch *> branchStack;
+        std::stack<bool> conditionStack;
         void linkLast(Branch *end);
         void pop();
         void check(Branch *branch);
@@ -34,6 +35,14 @@ namespace lizzy
         void belse(int iptr);
         void belif(int iptr);
         void bendif(int iptr);
+        void bwhile(int iptr);
+        void bendwhile(int iptr);
+        int rif(int iptr, bool cond);
+        int relse(int iptr);
+        int relif(int iptr, bool cond);
+        void rendif(int iptr);
+        int rwhile(int iptr, bool cond);
+        int rendwhile(int iptr);
         void build(int iptr, std::string commandName);
         int jump(int failedBranch);
         void show();

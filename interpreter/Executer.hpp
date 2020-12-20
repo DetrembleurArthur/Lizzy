@@ -10,14 +10,12 @@ namespace lizzy
     class Executer
     {
     private:
-        std::vector<LZDataType *> lostResults;
         ExecutionEnv *env = nullptr;
     public:
         Executer();
         virtual ~Executer();
         void setEnv(ExecutionEnv *env);
         void execute();
-        std::vector<LZDataType *>& getLostResults();
     };
 }
 

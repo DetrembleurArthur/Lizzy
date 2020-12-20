@@ -12,7 +12,7 @@ namespace lizzy
     {
     private:
         std::vector<Callable *> arguments;
-        ProtoMap *protoMap;
+        Prototype *prototype;
         bool undefined;
         Command *command;
         Instruction *super;
@@ -27,7 +27,7 @@ namespace lizzy
         Command *getCommand();
         void throwEx(std::string message) const noexcept(false);
         void setSuper(Instruction *super);
-        void setProtoMap(ProtoMap *protoMap, bool undefined=false);
+        void setPrototype(Prototype *protoMap, bool undefined=false);
         void setEnv(ExecutionEnv *env);
     };
 }

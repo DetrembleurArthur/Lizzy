@@ -9,6 +9,22 @@ void api::connect_api(Package& apiPkg)
     apiPkg.setName("lizzy");
     apiPkg.createCommand("nop", false).getActionBundle().setAction({}, api::nop);
 
+    Command& command = apiPkg.createCommand("test", false);
+    command.getActionBundle().setAction([](Arguments args, ExecutionEnv *env){
+            cout << args.size() << endl;
+            return (LZDataType *) nullptr;
+    });
+    command.getActionBundle().setAction({LZDataType::isFloat},
+    [](Arguments args, ExecutionEnv *env){
+            cout << "FL" << endl;
+            return (LZDataType *) nullptr;
+    });
+    command.getActionBundle().setAction({LZDataType::isInteger},
+    [](Arguments args, ExecutionEnv *env){
+            cout << "INT" << endl;
+            return (LZDataType *) nullptr;
+    });
+
     lang::api::connect_api(apiPkg.createPackage("lang"));
 }
 

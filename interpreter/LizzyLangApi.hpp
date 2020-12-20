@@ -14,6 +14,8 @@ namespace lizzy
             LZDataType *elif_1_LZBool(Arguments args, ExecutionEnv *env);
             LZDataType *else_0(Arguments args, ExecutionEnv *env);
             LZDataType *endif_0(Arguments args, ExecutionEnv *env);
+            LZDataType *while_1_LZBool(Arguments args, ExecutionEnv *env);
+            LZDataType *endwhile_0(Arguments args, ExecutionEnv *env);
         }
     }
 }

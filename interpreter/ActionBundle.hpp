@@ -10,19 +10,31 @@ namespace lizzy
 {
 	typedef const std::vector<LZDataType *>& Arguments;
 	typedef LZDataType *(*Action)(Arguments, ExecutionEnv *);
-    typedef std::map<std::string, Action> ProtoMap;
+
+    class Prototype
+    {
+    private:
+        int nargs = -2;
+        std::vector<std::vector<int (*)(LZDataType *)>> conditions;
+        std::vector<Action> actions;
+    public:
+        void setArgs(int n);
+        void set(std::vector<int (*)(LZDataType *)>& condition, Action action);
+        void set(Action action);
+        Action get(std::vector<LZDataType *>& data);
+    };
 
     class ActionBundle
     {
     private:
-        std::map<int, ProtoMap> bundle;
+        std::map<int, Prototype> bundle;
     public:
         static const int UNDEFINED_NUMBER_OF_ARGUMENTS;
         ActionBundle();
         void setAction(Action action);
-        void setAction(std::vector<std::string>&& prototype, Action);
-        ProtoMap& getProtoMap(int nargs);
-        bool existsProtoMap(int nargs) const;
+        void setAction(std::vector<int (*)(LZDataType *)>&& condition, Action action);
+        Prototype& getPrototype(int nargs);
+        bool existsPrototype(int nargs) const;
         int getMax() const;
         int getMin() const;
 

@@ -4,13 +4,6 @@ This is a lizzy code
 :)
 */
 
-
 if true
-    nop
-    nop
-    if true
-        nop
-    endif
-    nop
-
+lizzy.test(5.3)
 endif

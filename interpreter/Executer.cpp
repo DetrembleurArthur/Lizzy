@@ -14,10 +14,6 @@ Executer::~Executer()
 {
     if(env)
         delete env;
-    for(auto *result : lostResults)
-    {
-        delete result;
-    }
 }
 
 void Executer::setEnv(ExecutionEnv *env)
@@ -34,12 +30,5 @@ void Executer::execute()
     {
         (*instructions)[iptr]->setEnv(env);
         LZDataType *result = (*instructions)[iptr]->getResult();
-        if(result)
-            lostResults.push_back(result);
     }
-}
-
-std::vector<LZDataType *>& Executer::getLostResults()
-{
-    return lostResults;
 }

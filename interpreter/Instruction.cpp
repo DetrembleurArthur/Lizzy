@@ -6,7 +6,7 @@ using namespace lizzy;
 
 
 
-Instruction::Instruction(Command *command) : protoMap(nullptr), command(command), super(nullptr), env(nullptr)
+Instruction::Instruction(Command *command) : prototype(nullptr), command(command), super(nullptr), env(nullptr)
 {
 	Debug::loginfo("create instruction: " + command->getViewFullName());
 }
@@ -33,6 +33,8 @@ Instruction& Instruction::push(Callable* arg)
 	arguments.push_back(arg);
 	if(dynamic_cast<Instruction *>(arg))
 	{
+		if(not dynamic_cast<Instruction *>(arg)->getCommand()->isInner())
+			throw LZException(dynamic_cast<Instruction *>(arg)->getCommand()->getViewFullName() + " is not an inner command");
 		dynamic_cast<Instruction *>(arg)->setSuper(this);
 		dynamic_cast<Instruction *>(arg)->setPEnv(env);
 		Debug::loginfo("push instruction:\n" + dynamic_cast<Instruction *>(arg)->getStackTrace());
@@ -57,56 +59,16 @@ void Instruction::throwEx(string message) const
 LZDataType *Instruction::getResult() const
 {
 	vector<LZDataType *> results;
-	string prototype = "";
 	if(not arguments.empty())
 	{
 		auto len = arguments.size();
-		LZDataType *result = arguments[0]->getResult();
-		if(dynamic_cast<LZId *>(result))
+		for(int i = 0; i < len; i++)
 		{
-			LZVariable *temp = (*env)->getDataStack()->getVariable(result->toString());
-			if(temp)
-			{
-				result = temp;
-			}
-		}
-		prototype = result->getId();
-		results.push_back(result);
-		for(int i = 1; i < len; i++)
-		{
-			result = arguments[i]->getResult();
-			if(dynamic_cast<LZId *>(result))
-			{
-				LZVariable *temp = (*env)->getDataStack()->getVariable(result->toString());
-				if(temp)
-				{
-					result = temp;
-				}
-			}
-			prototype += "&" + result->getId();
+			LZDataType *result = arguments[i]->getResult();
 			results.push_back(result);
 		}
 	}
-	cout << "PROTO: " << prototype << endl;
-	if(not undefined)
-	{
-		if(protoMap->find(prototype) == protoMap->end())
-		{
-			if(protoMap->find("") != protoMap->end())
-			{
-				prototype = "";
-			}
-			else
-			{
-				throwEx("has no prototype like (" + prototype + ")");
-			}
-		}
-		return (*protoMap)[prototype](results, *env);
-	}
-	else
-	{
-		return (*protoMap)[""](results, *env);
-	}
+	return prototype->get(results)(results, *env);
 }
 
 void Instruction::setSuper(Instruction *super)
@@ -114,9 +76,9 @@ void Instruction::setSuper(Instruction *super)
 	this->super = super;
 }
 
-void Instruction::setProtoMap(ProtoMap *protoMap, bool undefined)
+void Instruction::setPrototype(Prototype *protoMap, bool undefined)
 {
-	this->protoMap = protoMap;
+	this->prototype = protoMap;
 	this->undefined = undefined;
 }
 
