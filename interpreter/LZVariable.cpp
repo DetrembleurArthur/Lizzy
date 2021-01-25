@@ -13,6 +13,7 @@ LZVariable::LZVariable(const std::string& name, LZDataType *other) : reference(o
 {
     if(name.size() > 1)
     {
+        Debug::loginfo("create var " + name);
         this->name = name.substr(1);
     }
     else

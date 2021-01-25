@@ -4,6 +4,11 @@ This is a lizzy code
 :)
 */
 
-if true
-lizzy.test(5.3)
-endif
+var $Hello "Hello World!"
+var $pi 3.14
+
+while 1
+
+	println($Hello)
+
+end while

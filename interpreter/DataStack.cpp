@@ -6,7 +6,7 @@ using namespace lizzy;
 
 DataStack::DataStack()
 {
-
+    push();
 }
 
 DataStack::~DataStack()
@@ -29,7 +29,7 @@ int DataStack::push(LZVariable *var)
     {
         if(var->getName() == stack[i]->getName())
         {
-            throw new LZException("'" + var->getName() + "' is duplicated");
+            throw LZException("'" + var->getName() + "' is duplicated");
         }
     }
     stack.push_back(var);
@@ -68,11 +68,11 @@ LZVariable *DataStack::getVariable(const std::string& id)
 {
     if(stack.size())
     {
-        for(int i = stack.size() - 1; i >= 0; i++)
+        for(int i = stack.size() - 1; i >= 0; i--)
         {
             if(stack[i]->getName() == id)
                 return stack[i];
         }
     }
-    return nullptr;
+    throw LZException(id + " variable not exists");
 }
